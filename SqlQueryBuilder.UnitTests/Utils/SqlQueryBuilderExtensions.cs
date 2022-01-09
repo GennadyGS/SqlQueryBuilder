@@ -2,5 +2,6 @@
 
 internal static class SqlQueryBuilderExtensions
 {
-    public static SqlQueryBuilderAssertions Should(this SqlQueryBuilder instance) => new(instance);
+    public static SqlQueryBuilderAssertions Should(this SqlQueryBuilder instance) => 
+        new(instance);
 }

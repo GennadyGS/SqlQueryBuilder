@@ -6,7 +6,7 @@ namespace SqlQueryBuilder;
 
 public sealed class SqlQueryBuilder
 {
-    private const string ParameterTag = "@";
+    private const char ParameterTag = '@';
     private const string ParameterPrefix = "p";
 
     private List<Entry> Entries { get; } = new();
@@ -44,6 +44,10 @@ public sealed class SqlQueryBuilder
         AppendLiteral(s);
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "Style", 
+        "IDE0060:Remove unused parameter", 
+        Justification = "Constructor with following parameter is required for InterpolatedStringHandler")]
     public SqlQueryBuilder(int literalLength, int formattedCount)
     {
     }
@@ -67,7 +71,7 @@ public sealed class SqlQueryBuilder
 
     private abstract record Entry;
 
-    private record StringEntry(string String) : Entry;
+    private sealed record StringEntry(string String) : Entry;
 
-    private record ParameterEntry(object? Value) : Entry;
+    private sealed record ParameterEntry(object? Value) : Entry;
 }
