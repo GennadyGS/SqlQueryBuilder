@@ -1,7 +1,7 @@
-using SqlQueryWithParameters.UnitTests.Utils;
+using SqlQueryBuilder.UnitTests.Utils;
 using Xunit;
 
-namespace SqlQueryWithParameters.UnitTests;
+namespace SqlQueryBuilder.UnitTests;
 
 public sealed class SqlQueryWithParametersTests
 {

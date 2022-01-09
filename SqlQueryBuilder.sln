@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqlQueryWithParameters", "SqlQueryWithParameters\SqlQueryWithParameters.csproj", "{BED600ED-1E72-4362-A40F-8964E9153AB9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqlQueryBuilder", "SqlQueryBuilder\SqlQueryBuilder.csproj", "{BED600ED-1E72-4362-A40F-8964E9153AB9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqlQueryWithParameters.UnitTests", "SqlQueryWithParameters.UnitTests\SqlQueryWithParameters.UnitTests.csproj", "{8D3C67E9-7383-4F5C-8674-8088A05C0D32}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqlQueryBuilder.UnitTests", "SqlQueryBuilder.UnitTests\SqlQueryBuilder.UnitTests.csproj", "{8D3C67E9-7383-4F5C-8674-8088A05C0D32}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

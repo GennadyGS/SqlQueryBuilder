@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SqlQueryWithParameters\SqlQueryWithParameters.csproj" />
+    <ProjectReference Include="..\SqlQueryBuilder\SqlQueryBuilder.csproj" />
   </ItemGroup>
 
 </Project>
