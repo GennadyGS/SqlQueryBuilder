@@ -11,9 +11,15 @@ internal sealed class SqlQueryBuilderAssertions
     {
     }
 
-    public AndConstraint<SqlQueryBuilderAssertions> BeQueryWithParameters(string query)
+    public AndConstraint<SqlQueryBuilderAssertions> HaveQuery(
+        string query, string because = "", params object[] becauseArgs)
     {
-        Subject.Query.Should().Be(query);
+        Subject.Query.Should().Be(query, because, becauseArgs);
+        return new AndConstraint<SqlQueryBuilderAssertions>(this);
+    }
+
+    public AndConstraint<SqlQueryBuilderAssertions> NotHaveParameters()
+    {
         return new AndConstraint<SqlQueryBuilderAssertions>(this);
     }
 
