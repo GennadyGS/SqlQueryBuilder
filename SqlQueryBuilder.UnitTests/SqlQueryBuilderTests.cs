@@ -32,8 +32,8 @@ public sealed class SqlQueryBuilderTests
         SqlQueryBuilder query = $"SELECT * FROM Orders WHERE Id = {123}";
 
         query.Should()
-            .HaveQuery("SELECT * FROM Orders WHERE Id = @p1").
-            And.HaveParameters(
+            .HaveQuery("SELECT * FROM Orders WHERE Id = @p1")
+            .And.HaveParameters(
                 new Dictionary<string, object>
                 {
                     ["p1"] = 123,
