@@ -15,4 +15,5 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: PublishPackage
-      run: PublishPackage.ps1 -apiKey ${{ secrets.NUGET_ORG_API_KEY }}
+      shell: pwsh
+      run: ./PublishPackage.ps1 -apiKey ${{ secrets.NUGET_ORG_API_KEY }}
