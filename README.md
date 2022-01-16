@@ -3,7 +3,7 @@ Utility class for building SQL queries with parameters based on C# string interp
 
 ## Examples
 ```csharp
-// Creating SQL query with parameters
+// Building SQL query with parameters
 SqlQueryBuilder queryBuilder = $"SELECT * FROM Orders WHERE Id = {123}";
 queryBuilder.GetQuery(); // "SELECT * FROM Orders WHERE Id = @p1"
 queryBuilder.GetParameters(); // new Dictionary { ["p1"] = 123 }
