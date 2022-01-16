@@ -1,5 +1,5 @@
 # SqlQueryBuilder
-Utility class for creating SQL queries with parameters based on C# 10 string interpolation handlers.
+Utility class for building SQL queries with parameters based on C# string interpolation.
 
 ## Examples
 ```csharp

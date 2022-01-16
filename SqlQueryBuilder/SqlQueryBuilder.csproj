@@ -8,8 +8,8 @@
     <Authors>Gennadii Saltyshchak</Authors>
     <PackageProjectUrl>https://github.com/GennadyGS/SqlQueryBuilder</PackageProjectUrl>
     <RepositoryUrl>https://github.com/GennadyGS/SqlQueryBuilder</RepositoryUrl>
-    <PackageTags>sql</PackageTags>
-    <Description>SQL builder class based on string interpolation.</Description>
+    <PackageTags>dotnet;CSharp;sql;builder;StringInterpolation</PackageTags>
+    <Description>Utility class for building SQL queries with parameters based on C# string interpolation.</Description>
   </PropertyGroup>
 
   <ItemGroup>
