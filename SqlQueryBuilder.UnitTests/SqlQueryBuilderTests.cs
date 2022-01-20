@@ -10,7 +10,7 @@ public sealed class SqlQueryBuilderTests
     {
         SqlQueryBuilder query = "SELECT * FROM Orders WHERE Id = 123";
 
-        Assert.Equal("SELECT * FROM Orders WHERE Id = 123", query.GetQuery());
+        Assert.Equal(expected: "SELECT * FROM Orders WHERE Id = 123", actual: query.GetQuery());
         Assert.Empty(query.GetParameters());
     }
 
@@ -19,30 +19,36 @@ public sealed class SqlQueryBuilderTests
     {
         SqlQueryBuilder query = $"SELECT * FROM Orders WHERE Id = 123";
 
-        Assert.Equal("SELECT * FROM Orders WHERE Id = 123", query.GetQuery());
+        Assert.Equal(expected: "SELECT * FROM Orders WHERE Id = 123", actual: query.GetQuery());
         Assert.Empty(query.GetParameters());
     }
 
     [Fact]
     public void ShouldBeImplicitlyCastFromInterpolatedStringWithParameters()
     {
+        // Building SQL query with parameters
         SqlQueryBuilder query = $"SELECT * FROM Orders WHERE Id = {123}";
 
-        Assert.Equal("SELECT * FROM Orders WHERE Id = @p1", query.GetQuery());
-        Assert.Equal(new Dictionary<string, object?> { ["p1"] = 123 }, query.GetParameters());
+        Assert.Equal(
+            expected: "SELECT * FROM Orders WHERE Id = @p1", 
+            actual: query.GetQuery());
+        Assert.Equal(
+            expected: new Dictionary<string, object?> { ["p1"] = 123 }, 
+            actual: query.GetParameters());
     }
 
     [Fact]
     public void ShouldBeComposable()
     {
+        // Composing SQL queries with parameters
         SqlQueryBuilder innerQuery = $"SELECT * FROM Orders WHERE Id = {123}";
         SqlQueryBuilder outerQuery = $"SELECT * FROM ({innerQuery}) src WHERE IsValid = {true}";
 
         Assert.Equal(
-            "SELECT * FROM (SELECT * FROM Orders WHERE Id = @p1) src WHERE IsValid = @p2", 
-            outerQuery.GetQuery());
+            expected: "SELECT * FROM (SELECT * FROM Orders WHERE Id = @p1) src WHERE IsValid = @p2",
+            actual: outerQuery.GetQuery());
         Assert.Equal(
-            new Dictionary<string, object?> { ["p1"] = 123, ["p2"] = true }, 
-            outerQuery.GetParameters());
+            expected: new Dictionary<string, object?> { ["p1"] = 123, ["p2"] = true }, 
+            actual: outerQuery.GetParameters());
     }
 }
