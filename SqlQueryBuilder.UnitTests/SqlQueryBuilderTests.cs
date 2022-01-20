@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using SqlQueryBuilder.UnitTests.Utils;
 using Xunit;
 
 namespace SqlQueryBuilder.UnitTests;
@@ -11,9 +10,8 @@ public sealed class SqlQueryBuilderTests
     {
         SqlQueryBuilder query = "SELECT * FROM Orders WHERE Id = 123";
 
-        query.Should()
-            .HaveQuery("SELECT * FROM Orders WHERE Id = 123")
-            .And.NotHaveParameters();
+        Assert.Equal("SELECT * FROM Orders WHERE Id = 123", query.GetQuery());
+        Assert.Empty(query.GetParameters());
     }
 
     [Fact]
@@ -21,9 +19,8 @@ public sealed class SqlQueryBuilderTests
     {
         SqlQueryBuilder query = $"SELECT * FROM Orders WHERE Id = 123";
 
-        query.Should()
-            .HaveQuery("SELECT * FROM Orders WHERE Id = 123")
-            .And.NotHaveParameters();
+        Assert.Equal("SELECT * FROM Orders WHERE Id = 123", query.GetQuery());
+        Assert.Empty(query.GetParameters());
     }
 
     [Fact]
@@ -31,13 +28,8 @@ public sealed class SqlQueryBuilderTests
     {
         SqlQueryBuilder query = $"SELECT * FROM Orders WHERE Id = {123}";
 
-        query.Should()
-            .HaveQuery("SELECT * FROM Orders WHERE Id = @p1")
-            .And.HaveParameters(
-                new Dictionary<string, object>
-                {
-                    ["p1"] = 123,
-                });
+        Assert.Equal("SELECT * FROM Orders WHERE Id = @p1", query.GetQuery());
+        Assert.Equal(new Dictionary<string, object?> { ["p1"] = 123 }, query.GetParameters());
     }
 
     [Fact]
@@ -46,15 +38,11 @@ public sealed class SqlQueryBuilderTests
         SqlQueryBuilder innerQuery = $"SELECT * FROM Orders WHERE Id = {123}";
         SqlQueryBuilder outerQuery = $"SELECT * FROM ({innerQuery}) src WHERE IsValid = {true}";
 
-        outerQuery.Should()
-            .HaveQuery(
-                "SELECT * FROM (SELECT * FROM Orders WHERE Id = @p1) src" + 
-                " WHERE IsValid = @p2")
-            .And.HaveParameters(
-                new Dictionary<string, object>
-                {
-                    ["p1"] = 123,
-                    ["p2"] = true,
-                });
+        Assert.Equal(
+            "SELECT * FROM (SELECT * FROM Orders WHERE Id = @p1) src WHERE IsValid = @p2", 
+            outerQuery.GetQuery());
+        Assert.Equal(
+            new Dictionary<string, object?> { ["p1"] = 123, ["p2"] = true }, 
+            outerQuery.GetParameters());
     }
 }
