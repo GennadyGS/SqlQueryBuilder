@@ -2,12 +2,13 @@
 using System.Text;
 
 namespace SqlQueryBuilder;
+
 [InterpolatedStringHandler]
 
 public sealed class SqlQueryBuilder
 {
     private const char ParameterTag = '@';
-    private const string ParameterPrefix = "p";
+    private const string DefaultParameterNamePrefix = "p";
 
     private List<Entry> Entries { get; } = new();
 
@@ -16,7 +17,8 @@ public sealed class SqlQueryBuilder
     public IReadOnlyDictionary<string, object?> GetParameters() => 
         GetQueryAndParameters().parameters;
 
-    public (string query, IReadOnlyDictionary<string, object?> parameters) GetQueryAndParameters()
+    public (string query, IReadOnlyDictionary<string, object?> parameters) GetQueryAndParameters(
+        string parameterNamePrefix = DefaultParameterNamePrefix)
     {
         var parameterIndex = 1;
         var queryBuilder = new StringBuilder();
@@ -29,7 +31,7 @@ public sealed class SqlQueryBuilder
                     queryBuilder.Append(se.String);
                     break;
                 case ParameterEntry pe:
-                    var parameterName = ParameterPrefix + parameterIndex++;
+                    var parameterName = parameterNamePrefix + parameterIndex++;
                     queryBuilder.Append(ParameterTag).Append(parameterName);
                     parameters.Add(parameterName, pe.Value);
                     break;
