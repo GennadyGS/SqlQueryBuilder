@@ -4,23 +4,32 @@ Utility class for building SQL queries with parameters based on C# string interp
 ## Examples
 ```csharp
 // Building SQL query with parameters
-SqlQueryBuilder query = $"SELECT * FROM Orders WHERE Id = {123}";
+SqlQueryBuilder queryBuilder = $"SELECT * FROM Orders WHERE Id = {123}";
 
 Assert.Equal(
-    expected: "SELECT * FROM Orders WHERE Id = @p1", 
-    actual: query.GetQuery());
+    "SELECT * FROM Orders WHERE Id = @p1", 
+    queryBuilder.GetQuery());
 Assert.Equal(
-    expected: new Dictionary<string, object?> { ["p1"] = 123 }, 
-    actual: query.GetParameters());
+    new Dictionary<string, object?> { ["p1"] = 123 }, 
+    queryBuilder.GetParameters());
 
 // Composing SQL queries with parameters
-SqlQueryBuilder innerQuery = $"SELECT * FROM Orders WHERE Id = {123}";
-SqlQueryBuilder outerQuery = $"SELECT * FROM ({innerQuery}) src WHERE IsValid = {true}";
+SqlQueryBuilder innerQueryBuilder = $"SELECT * FROM Orders WHERE Id = {123}";
+SqlQueryBuilder outerQueryBuilder = 
+    $"SELECT * FROM ({innerQueryBuilder}) src WHERE IsValid = {true}";
 
 Assert.Equal(
-    expected: "SELECT * FROM (SELECT * FROM Orders WHERE Id = @p1) src WHERE IsValid = @p2",
-    actual: outerQuery.GetQuery());
+    "SELECT * FROM (SELECT * FROM Orders WHERE Id = @p1) src WHERE IsValid = @p2",
+    outerQueryBuilder.GetQuery());
 Assert.Equal(
-    expected: new Dictionary<string, object?> { ["p1"] = 123, ["p2"] = true }, 
-    actual: outerQuery.GetParameters());
+    new Dictionary<string, object?> { ["p1"] = 123, ["p2"] = true }, 
+    outerQueryBuilder.GetParameters());
+
+// Building SQL query with specified parameter name prefix
+SqlQueryBuilder queryBuilder = $"SELECT * FROM Orders WHERE Id = {123}";
+
+var (query, parameters) = queryBuilder.GetQueryAndParameters("param");
+
+Assert.Equal("SELECT * FROM Orders WHERE Id = @param1", query);
+Assert.Equal(new Dictionary<string, object?> { ["param1"] = 123 }, parameters);
 ```

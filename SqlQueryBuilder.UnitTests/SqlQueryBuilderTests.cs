@@ -65,9 +65,9 @@ public sealed class SqlQueryBuilderTests
     }
 
     [Fact]
-    public void ShouldReturnParameterNamesWithPassedSuffix()
+    public void ShouldReturnParameterNamesWithSpecifiedSuffix()
     {
-        // Building SQL query with given parameter name prefix
+        // Building SQL query with specified parameter name prefix
         SqlQueryBuilder queryBuilder = $"SELECT * FROM Orders WHERE Id = {123}";
 
         var (query, parameters) = queryBuilder.GetQueryAndParameters("param");
