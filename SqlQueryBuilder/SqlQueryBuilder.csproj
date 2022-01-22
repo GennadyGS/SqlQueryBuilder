@@ -11,7 +11,12 @@
     <PackageTags>dotnet;CSharp;sql;builder;StringInterpolation</PackageTags>
     <Description>Utility class for building SQL queries with parameters based on C# string interpolation.</Description>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md" Link="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="SonarAnalyzer.CSharp" Version="8.33.0.40503">

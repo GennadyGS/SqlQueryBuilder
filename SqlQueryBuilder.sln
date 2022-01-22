@@ -7,11 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqlQueryBuilder", "SqlQuery
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqlQueryBuilder.UnitTests", "SqlQueryBuilder.UnitTests\SqlQueryBuilder.UnitTests.csproj", "{8D3C67E9-7383-4F5C-8674-8088A05C0D32}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BAB853B6-0315-4754-AF0A-1BD48A8819E8}"
-	ProjectSection(SolutionItems) = preProject
-		README.md = README.md
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
