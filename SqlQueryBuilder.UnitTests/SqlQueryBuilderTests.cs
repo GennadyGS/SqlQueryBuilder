@@ -75,4 +75,17 @@ public sealed class SqlQueryBuilderTests
         Assert.Equal("SELECT * FROM Orders WHERE Id = @param1", query);
         Assert.Equal(new Dictionary<string, object?> { ["param1"] = 123 }, parameters);
     }
+
+    [Fact]
+    public void ShouldReuseParametersWithTheSameValue()
+    {
+        SqlQueryBuilder queryBuilder = 
+            $"SELECT * FROM Orders WHERE Id = {123} AND IsValid = {true} AND Amount = {123}";
+
+        var (query, parameters) = queryBuilder.GetQueryAndParameters();
+
+        Assert.Equal(
+            "SELECT * FROM Orders WHERE Id = @p1 AND IsValid = @p2 AND Amount = @p1", query);
+        Assert.Equal(new Dictionary<string, object?> { ["p1"] = 123, ["p2"] = true }, parameters);
+    }
 }
