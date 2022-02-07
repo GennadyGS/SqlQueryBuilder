@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Text;
+using SqlQueryBuilder.Utils;
 
 namespace SqlQueryBuilder;
 
@@ -40,24 +41,38 @@ public sealed class SqlQueryBuilder
     public (string query, IReadOnlyDictionary<string, object?> parameters) GetQueryAndParameters(
         string parameterNamePrefix = DefaultParameterNamePrefix)
     {
-        var parameterIndex = 1;
-        var queryBuilder = new StringBuilder();
-        var parameters = new Dictionary<string, object?>();
-        foreach (var entry in Entries)
+        var parameterValueToNameMap = Entries
+            .OfType<ParameterEntry>()
+            .Select(entry => entry.Value)
+            .Distinct()
+            .Select((value, index) => (value, index))
+            .ToDictionaryWithNullableKey(
+                item => item.value,
+                item => parameterNamePrefix + (item.index + 1));
+
+        void AppendEntryToStringBuilder(Entry entry, StringBuilder stringBuilder)
         {
             switch (entry)
             {
-                case StringEntry se:
-                    queryBuilder.Append(se.String);
+                case ParameterEntry parameterEntry:
+                    stringBuilder.Append(ParameterTag);
+                    stringBuilder.Append(parameterValueToNameMap[parameterEntry.Value]);
                     break;
-                case ParameterEntry pe:
-                    var parameterName = parameterNamePrefix + parameterIndex++;
-                    queryBuilder.Append(ParameterTag).Append(parameterName);
-                    parameters.Add(parameterName, pe.Value);
+                case StringEntry stringEntry:
+                    stringBuilder.Append(stringEntry.String);
                     break;
+                default:
+                    throw new InvalidOperationException("Impossible case");
             }
         }
 
+        var queryBuilder = new StringBuilder();
+        foreach (var entry in Entries)
+        {
+            AppendEntryToStringBuilder(entry, queryBuilder);
+        }
+
+        var parameters = parameterValueToNameMap.ToDictionary(kvp => kvp.Value, kvp => kvp.Key);
         return (queryBuilder.ToString(), parameters);
     }
 
@@ -85,18 +100,25 @@ public sealed class SqlQueryBuilder
         Entries.Add(new StringEntry(value));
     }
 
-    /// <summary>Writes the instance of <see cref="SqlQueryBuilder"/> to the handler.</summary>
-    /// <param name="value">The the instance of <see cref="SqlQueryBuilder"/> to write.</param>
-    public void AppendFormatted(SqlQueryBuilder value)
-    {
-        Entries.AddRange(value.Entries);
-    }
-
     /// <summary>Writes the specified value to the handler.</summary>
     /// <param name="value">The value to write.</param>
-    public void AppendFormatted<T>(T value)
+    public void AppendFormatted<T>(T? value)
     {
         Entries.Add(new ParameterEntry(value));
+    }
+
+    /// <summary>Writes the instance of <see cref="SqlQueryBuilder"/> to the handler.</summary>
+    /// <param name="value">The the instance of <see cref="SqlQueryBuilder"/> to write.</param>
+    public void AppendFormatted(SqlQueryBuilder? value)
+    {
+        if (value != default)
+        {
+            Entries.AddRange(value.Entries);
+        }
+        else
+        {
+            Entries.Add(new ParameterEntry(default));
+        }
     }
 
     /// <summary>
