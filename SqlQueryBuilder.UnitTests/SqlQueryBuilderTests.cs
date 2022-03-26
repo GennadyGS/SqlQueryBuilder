@@ -106,6 +106,7 @@ public sealed class SqlQueryBuilderTests
     [Fact]
     public void ShouldSupportMetadata()
     {
+        // Building SQL query with metadata
         var queryBuilder = ((SqlQueryBuilder)$"SELECT * FROM Orders WHERE Id = {123}")
             .AddMetadata("DbName", "Db1");
 

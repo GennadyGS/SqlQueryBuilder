@@ -32,4 +32,18 @@ var (query, parameters) = queryBuilder.GetQueryAndParameters("param");
 
 Assert.Equal("SELECT * FROM Orders WHERE Id = @param1", query);
 Assert.Equal(new Dictionary<string, object?> { ["param1"] = 123 }, parameters);
+
+// Building SQL query with metadata
+var queryBuilder = ((SqlQueryBuilder)$"SELECT * FROM Orders WHERE Id = {123}")
+    .AddMetadata("DbName", "Db1");
+
+Assert.Equal(
+    "SELECT * FROM Orders WHERE Id = @p1",
+    queryBuilder.GetQuery());
+Assert.Equal(
+    new Dictionary<string, object?> { ["p1"] = 123 },
+    queryBuilder.GetParameters());
+Assert.Equal(
+    new Dictionary<string, object?> { ["DbName"] = "Db1" },
+    queryBuilder.Metadata);
 ```
