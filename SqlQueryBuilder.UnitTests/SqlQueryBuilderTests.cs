@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Xunit;
 
@@ -100,5 +101,69 @@ public sealed class SqlQueryBuilderTests
         Assert.Equal(
             "SELECT * FROM Orders WHERE Id = @p1 AND IsValid = @p2 AND Amount = @p2", query);
         Assert.Equal(new Dictionary<string, object?> { ["p1"] = 123, ["p2"] = null }, parameters);
+    }
+
+    [Fact]
+    public void ShouldSupportMetadata()
+    {
+        var queryBuilder = ((SqlQueryBuilder)$"SELECT * FROM Orders WHERE Id = {123}")
+            .AddMetadata("DbName", "Db1");
+
+        Assert.Equal(
+            "SELECT * FROM Orders WHERE Id = @p1",
+            queryBuilder.GetQuery());
+        Assert.Equal(
+            new Dictionary<string, object?> { ["p1"] = 123 },
+            queryBuilder.GetParameters());
+        Assert.Equal(
+            new Dictionary<string, object?> { ["DbName"] = "Db1" },
+            queryBuilder.Metadata);
+    }
+
+    [Fact]
+    public void ShouldPropagateAndMergeMetadataOnQueryComposition()
+    {
+        var innerQueryBuilder = 
+            ((SqlQueryBuilder)$"SELECT * FROM Orders WHERE Id = {123}")
+                .AddMetadata(
+                    new Dictionary<string, object?>
+                    {
+                        ["a"] = 1,
+                        ["b"] = 2,
+                        ["c"] = null,
+                    });
+        var outerQueryBuilder =
+            ((SqlQueryBuilder)$"SELECT * FROM ({innerQueryBuilder}) src WHERE IsValid = {true}")
+                .AddMetadata("a", 1)
+                .AddMetadata("c", null);
+        Assert.Equal(
+            "SELECT * FROM (SELECT * FROM Orders WHERE Id = @p1) src WHERE IsValid = @p2",
+            outerQueryBuilder.GetQuery());
+        Assert.Equal(
+            new Dictionary<string, object?> { ["p1"] = 123, ["p2"] = true },
+            outerQueryBuilder.GetParameters());
+        Assert.Equal(
+            new Dictionary<string, object?> { ["a"] = 1, ["b"] = 2, ["c"] = null },
+            outerQueryBuilder.Metadata);
+    }
+
+    [Fact]
+    public void ShouldThrowInvalidOperationExceptionOnInconsistentMetadataOnQueryComposition()
+    {
+        var innerQueryBuilder =
+            ((SqlQueryBuilder)$"SELECT * FROM Orders WHERE Id = {123}")
+            .AddMetadata(
+                new Dictionary<string, object?>
+                {
+                    ["a"] = 1,
+                    ["b"] = 2,
+                    ["c"] = null,
+                });
+        Assert.Throws<InvalidOperationException>(() =>
+        {
+            ((SqlQueryBuilder)$"SELECT * FROM ({innerQueryBuilder}) src WHERE IsValid = {true}")
+                .AddMetadata("a", 1)
+                .AddMetadata("c", 3);
+        });
     }
 }

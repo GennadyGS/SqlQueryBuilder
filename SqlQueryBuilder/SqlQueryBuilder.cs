@@ -13,7 +13,13 @@ public sealed class SqlQueryBuilder
     private const char ParameterTag = '@';
     private const string DefaultParameterNamePrefix = "p";
 
-    private List<Entry> Entries { get; } = new();
+    private readonly List<Entry> _entries = new();
+    private readonly Dictionary<string, object?> _metadata = new();
+
+    /// <summary>
+    /// Gets the metadata.
+    /// </summary>
+    public IReadOnlyDictionary<string, object?> Metadata => _metadata;
 
     /// <summary>
     /// Gets the text of SQL query with inlined parameters.
@@ -41,7 +47,7 @@ public sealed class SqlQueryBuilder
     public (string query, IReadOnlyDictionary<string, object?> parameters) GetQueryAndParameters(
         string parameterNamePrefix = DefaultParameterNamePrefix)
     {
-        var parameterValueToNameMap = Entries
+        var parameterValueToNameMap = _entries
             .OfType<ParameterEntry>()
             .Select(entry => entry.Value)
             .Distinct()
@@ -67,7 +73,7 @@ public sealed class SqlQueryBuilder
         }
 
         var queryBuilder = new StringBuilder();
-        foreach (var entry in Entries)
+        foreach (var entry in _entries)
         {
             AppendEntryToStringBuilder(entry, queryBuilder);
         }
@@ -97,14 +103,14 @@ public sealed class SqlQueryBuilder
     /// <param name="value">The value to write.</param>
     public void AppendLiteral(string value)
     {
-        Entries.Add(new StringEntry(value));
+        _entries.Add(new StringEntry(value));
     }
 
     /// <summary>Writes the specified value to the handler.</summary>
     /// <param name="value">The value to write.</param>
     public void AppendFormatted<T>(T? value)
     {
-        Entries.Add(new ParameterEntry(value));
+        _entries.Add(new ParameterEntry(value));
     }
 
     /// <summary>Writes the instance of <see cref="SqlQueryBuilder"/> to the handler.</summary>
@@ -113,11 +119,12 @@ public sealed class SqlQueryBuilder
     {
         if (value != default)
         {
-            Entries.AddRange(value.Entries);
+            _entries.AddRange(value._entries);
+            AddMetadata(value._metadata);
         }
         else
         {
-            Entries.Add(new ParameterEntry(default));
+            _entries.Add(new ParameterEntry(default));
         }
     }
 
@@ -127,6 +134,68 @@ public sealed class SqlQueryBuilder
     /// <param name="s">The string to convert.</param>
     /// <returns>The instance of instance of <see cref="SqlQueryBuilder"/>.</returns>
     public static implicit operator SqlQueryBuilder(string s) => new(s);
+
+    /// <summary>
+    /// Adds metadata entry to query.
+    /// </summary>
+    /// <remarks>
+    /// Subsequent calls with the same key and value are idempotent,
+    /// while calls with the same key and different values cause <see cref="InvalidOperationException"/>.
+    /// </remarks>
+    /// <param name="key">Metadata key.</param>
+    /// <param name="value">Metadata value.</param>
+    /// <returns>Instance of <see cref="SqlQueryBuilder"/>.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// Metadata entry with key <paramref name="key"/>
+    /// but value different from <paramref name="value"/> already exists.
+    /// </exception>
+    public SqlQueryBuilder AddMetadata(string key, object? value)
+    {
+        if (!_metadata.TryGetValue(key, out var existingValue))
+        {
+            _metadata.Add(key, value);
+        }
+        else
+        {
+            if (!ObjectsEqual(value, existingValue))
+            {
+                throw new InvalidOperationException(
+                    $"Inconsistent value cannot be set to metadata key '{key}': '{value}' vs '{existingValue}'");
+            }
+        }
+
+        return this;
+    }
+
+    /// <summary>
+    /// Adds metadata entries to query.
+    /// </summary>
+    /// <remarks>
+    /// Subsequent calls with the same key and value are idempotent,
+    /// while calls with the same key and different values cause <see cref="InvalidOperationException"/>.
+    /// </remarks>
+    /// <param name="metadata">Dictionary containing multiple metadata entries.</param>
+    /// <returns>Instance of <see cref="SqlQueryBuilder"/>.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// Metadata entry exists with key from <paramref name="metadata"/> but with different value.
+    /// </exception>
+    public SqlQueryBuilder AddMetadata(IEnumerable<KeyValuePair<string, object?>> metadata)
+    {
+        foreach (var (key, value) in metadata)
+        {
+            AddMetadata(key, value);
+        }
+
+        return this;
+    }
+
+    private static bool ObjectsEqual(object? x, object? y) =>
+        (x, y) switch
+        {
+            (null, null) => true,
+            (null, _) => false,
+            var (xValue, yValue) => xValue.Equals(yValue),
+        };
 
     private abstract record Entry;
 
