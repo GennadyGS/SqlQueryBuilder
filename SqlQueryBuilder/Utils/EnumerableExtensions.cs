@@ -13,7 +13,7 @@ internal static class EnumerableExtensions
         where TKey : notnull
     {
         var keyValuePairs = source
-            .Select(item => KeyValuePair.Create(keySelector(item), valueSelector(item)))
+            .Select(item => new KeyValuePair<TKey?, TValue>(keySelector(item), valueSelector(item)))
             .ToList();
         return new DictionaryWithNullableKey<TKey, TValue>(keyValuePairs, equalityComparer);
     }

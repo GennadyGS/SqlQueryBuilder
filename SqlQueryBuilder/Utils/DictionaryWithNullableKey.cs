@@ -33,7 +33,7 @@ internal sealed class DictionaryWithNullableKey<TKey, TValue>
 
         _inner = keyValuePairs
             .Where(kvp => !_equalityComparer.Equals(kvp.Key, default))
-            .Select(kvp => KeyValuePair.Create(kvp.Key!, kvp.Value))
+            .Select(kvp => new KeyValuePair<TKey, TValue>(kvp.Key!, kvp.Value))
             .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
     }
@@ -64,9 +64,9 @@ internal sealed class DictionaryWithNullableKey<TKey, TValue>
         Justification = "Bug in analyzer: cast is required")]
     public IEnumerator<KeyValuePair<TKey?, TValue>> GetEnumerator()
     {
-        var innerNullable = _inner.Select(kvp => KeyValuePair.Create((TKey?)kvp.Key, kvp.Value));
+        var innerNullable = _inner.Select(kvp => new KeyValuePair<TKey?, TValue>((TKey?)kvp.Key, kvp.Value));
         var keyValuePairs = _hasDefaultKey
-            ? innerNullable.Prepend(KeyValuePair.Create((TKey?)default, _valueForDefaultKey))
+            ? innerNullable.Prepend(new KeyValuePair<TKey?, TValue>((TKey?)default, _valueForDefaultKey))
             : innerNullable;
         return keyValuePairs.GetEnumerator();
     }
@@ -78,7 +78,7 @@ internal sealed class DictionaryWithNullableKey<TKey, TValue>
             ? _hasDefaultKey
             : _inner.ContainsKey(key!);
 
-    public bool TryGetValue(TKey? key, [MaybeNullWhen(false)] out TValue value)
+    public bool TryGetValue(TKey? key, out TValue value)
     {
         if (_equalityComparer.Equals(key, default))
         {

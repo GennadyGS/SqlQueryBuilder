@@ -181,9 +181,9 @@ public sealed class SqlQueryBuilder
     /// </exception>
     public SqlQueryBuilder AddMetadata(IEnumerable<KeyValuePair<string, object?>> metadata)
     {
-        foreach (var (key, value) in metadata)
+        foreach (var kvp in metadata)
         {
-            AddMetadata(key, value);
+            AddMetadata(kvp.Key, kvp.Value);
         }
 
         return this;
@@ -197,9 +197,38 @@ public sealed class SqlQueryBuilder
             var (xValue, yValue) => xValue.Equals(yValue),
         };
 
-    private abstract record Entry;
+    private abstract class Entry
+    {
+    }
 
-    private sealed record StringEntry(string String) : Entry;
+    private sealed class StringEntry : Entry
+    {
+        public StringEntry(string String)
+        {
+            this.String = String;
+        }
 
-    private sealed record ParameterEntry(object? Value) : Entry;
+        public string String { get; }
+
+        public void Deconstruct(out string String)
+        {
+            String = this.String;
+        }
+    }
+
+    private sealed class ParameterEntry : Entry
+    {
+        public ParameterEntry(object? Value)
+        {
+            this.Value = Value;
+        }
+
+        public object? Value { get; }
+
+        public void Deconstruct(out object? Value)
+        {
+            Value = this.Value;
+        }
+    }
 }
+ 
