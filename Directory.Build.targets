@@ -1,5 +1,5 @@
 <Project>
   <PropertyGroup>
-    <Version>$([System.IO.File]::ReadAllText("$(SolutionDir)/Version.txt"))</Version>
+    <Version>1.0.5</Version>
   </PropertyGroup>
 </Project>
