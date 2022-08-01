@@ -118,6 +118,7 @@ public sealed class SqlQueryBuilder
 
     /// <summary>Writes the specified value to the handler.</summary>
     /// <param name="value">The value to write.</param>
+    /// <typeparam name="T">The type of <paramref name="value"/>.</typeparam>
     public void AppendFormatted<T>(T? value)
     {
         _entries.Add(new ParameterEntry(value));
