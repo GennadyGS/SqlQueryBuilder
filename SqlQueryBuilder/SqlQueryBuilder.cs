@@ -234,4 +234,3 @@ public sealed class SqlQueryBuilder
         public object? Value { get; }
     }
 }
- 
