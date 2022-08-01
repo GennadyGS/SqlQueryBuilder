@@ -129,6 +129,16 @@ public sealed class SqlQueryBuilder
     }
 
     /// <summary>
+    /// Writes the instance of <see cref="FormattedLiteral"/> to the handler
+    /// as inline literal value, rather than as parameter.
+    /// </summary>
+    /// <param name="value">The the instance of <see cref="FormattedLiteral"/> to write.</param>
+    public void AppendFormatted(FormattedLiteral value)
+    {
+        _entries.Add(new LiteralEntry(value.String));
+    }
+
+    /// <summary>
     /// Implicitly converts <see cref="string"/> into instance of <see cref="SqlQueryBuilder"/>.
     /// </summary>
     /// <param name="s">The string to convert.</param>

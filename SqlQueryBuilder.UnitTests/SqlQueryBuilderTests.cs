@@ -106,6 +106,19 @@ public sealed class SqlQueryBuilderTests
     }
 
     [Fact]
+    public void ShouldSupportParametersAsLiterals()
+    {
+        // Table name should be interpreted as inline literal string, rather than as parameter
+        const string tableName = "Orders";
+        SqlQueryBuilder queryBuilder = $"SELECT * FROM {tableName.AsLiteral()} WHERE Id = {123}";
+
+        var (query, parameters) = queryBuilder.GetQueryAndParameters();
+
+        Assert.Equal("SELECT * FROM Orders WHERE Id = @p1", query);
+        Assert.Equal(new Dictionary<string, object?> { ["p1"] = 123 }, parameters);
+    }
+
+    [Fact]
     public void ShouldSupportMetadata()
     {
         // Building SQL query with metadata
