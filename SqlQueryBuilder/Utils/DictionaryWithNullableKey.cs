@@ -16,7 +16,7 @@ internal sealed class DictionaryWithNullableKey<TKey, TValue>
         IEqualityComparer<TKey?>? equalityComparer = null)
     {
         _equalityComparer = equalityComparer ?? EqualityComparer<TKey?>.Default;
-        
+
         var defaultKeyValuePairs = keyValuePairs
             .Where(kvp => _equalityComparer.Equals(kvp.Key, default))
             .ToList();
@@ -35,7 +35,6 @@ internal sealed class DictionaryWithNullableKey<TKey, TValue>
             .Where(kvp => !_equalityComparer.Equals(kvp.Key, default))
             .Select(kvp => KeyValuePair.Create(kvp.Key!, kvp.Value))
             .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-
     }
 
     public int Count =>
@@ -59,8 +58,8 @@ internal sealed class DictionaryWithNullableKey<TKey, TValue>
             : throw new KeyNotFoundException($"Key {key} is not found in dictionary");
 
     [SuppressMessage(
-        "Minor Code Smell", 
-        "S1905:Redundant casts should not be used", 
+        "Minor Code Smell",
+        "S1905:Redundant casts should not be used",
         Justification = "Bug in analyzer: cast is required")]
     public IEnumerator<KeyValuePair<TKey?, TValue>> GetEnumerator()
     {

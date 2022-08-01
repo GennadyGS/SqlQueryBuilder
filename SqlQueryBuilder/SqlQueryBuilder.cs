@@ -31,7 +31,7 @@ public sealed class SqlQueryBuilder
     /// Gets the dictionary with names and values of SQL query parameters.
     /// </summary>
     /// <returns>The dictionary with names and values of SQL query parameters.</returns>
-    public IReadOnlyDictionary<string, object?> GetParameters() => 
+    public IReadOnlyDictionary<string, object?> GetParameters() =>
         GetQueryAndParameters().parameters;
 
     /// <summary>
@@ -92,8 +92,8 @@ public sealed class SqlQueryBuilder
     /// <param name="formattedCount">The number of interpolation expressions in the interpolated string.</param>
     /// <remarks>This is intended to be called only by compiler-generated code. Arguments are not validated as they'd otherwise be for members intended to be used directly.</remarks>
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
-        "Style", 
-        "IDE0060:Remove unused parameter", 
+        "Style",
+        "IDE0060:Remove unused parameter",
         Justification = "Constructor with following parameter is required for InterpolatedStringHandler")]
     public SqlQueryBuilder(int literalLength, int formattedCount)
     {

@@ -6,7 +6,7 @@ namespace SqlQueryBuilder.UnitTests;
 
 public sealed class SqlQueryBuilderTests
 {
-    [Fact] 
+    [Fact]
     public void ShouldBeImplicitlyCastFromString()
     {
         SqlQueryBuilder queryBuilder = "SELECT * FROM Orders WHERE Id = 123";
@@ -31,10 +31,10 @@ public sealed class SqlQueryBuilderTests
         SqlQueryBuilder queryBuilder = $"SELECT * FROM Orders WHERE Id = {123}";
 
         Assert.Equal(
-            "SELECT * FROM Orders WHERE Id = @p1", 
+            "SELECT * FROM Orders WHERE Id = @p1",
             queryBuilder.GetQuery());
         Assert.Equal(
-            new Dictionary<string, object?> { ["p1"] = 123 }, 
+            new Dictionary<string, object?> { ["p1"] = 123 },
             queryBuilder.GetParameters());
     }
 
@@ -43,14 +43,14 @@ public sealed class SqlQueryBuilderTests
     {
         // Composing SQL queries with parameters
         SqlQueryBuilder innerQueryBuilder = $"SELECT * FROM Orders WHERE Id = {123}";
-        SqlQueryBuilder outerQueryBuilder = 
+        SqlQueryBuilder outerQueryBuilder =
             $"SELECT * FROM ({innerQueryBuilder}) src WHERE IsValid = {true}";
 
         Assert.Equal(
             "SELECT * FROM (SELECT * FROM Orders WHERE Id = @p1) src WHERE IsValid = @p2",
             outerQueryBuilder.GetQuery());
         Assert.Equal(
-            new Dictionary<string, object?> { ["p1"] = 123, ["p2"] = true }, 
+            new Dictionary<string, object?> { ["p1"] = 123, ["p2"] = true },
             outerQueryBuilder.GetParameters());
     }
 
@@ -62,7 +62,7 @@ public sealed class SqlQueryBuilderTests
         SqlQueryBuilder queryBuilder = $"SELECT * FROM Orders WHERE Id = {value}";
 
         var (query, parameters) = queryBuilder.GetQueryAndParameters();
-        
+
         Assert.Equal("SELECT * FROM Orders WHERE Id = @p1", query);
         Assert.Equal(new Dictionary<string, object?> { ["p1"] = value }, parameters);
     }
@@ -82,7 +82,7 @@ public sealed class SqlQueryBuilderTests
     [Fact]
     public void ShouldReuseParametersWithTheSameValue()
     {
-        SqlQueryBuilder queryBuilder = 
+        SqlQueryBuilder queryBuilder =
             $"SELECT * FROM Orders WHERE Id = {123} AND IsValid = {true} AND Amount = {123}";
 
         var (query, parameters) = queryBuilder.GetQueryAndParameters();
@@ -139,7 +139,7 @@ public sealed class SqlQueryBuilderTests
     [Fact]
     public void ShouldPropagateAndMergeMetadataOnQueryComposition()
     {
-        var innerQueryBuilder = 
+        var innerQueryBuilder =
             ((SqlQueryBuilder)$"SELECT * FROM Orders WHERE Id = {123}")
                 .AddMetadata(
                     new Dictionary<string, object?>
