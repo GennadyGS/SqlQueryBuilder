@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SqlQueryBuilder.Utils;
 
@@ -58,15 +57,11 @@ internal sealed class DictionaryWithNullableKey<TKey, TValue>
             ? value
             : throw new KeyNotFoundException($"Key {key} is not found in dictionary");
 
-    [SuppressMessage(
-        "Minor Code Smell",
-        "S1905:Redundant casts should not be used",
-        Justification = "Bug in analyzer: cast is required")]
     public IEnumerator<KeyValuePair<TKey?, TValue>> GetEnumerator()
     {
-        var innerNullable = _inner.Select(kvp => KeyValuePair.Create((TKey?)kvp.Key, kvp.Value));
+        var innerNullable = _inner.Select(kvp => new KeyValuePair<TKey?, TValue>(kvp.Key, kvp.Value));
         var keyValuePairs = _hasDefaultKey
-            ? innerNullable.Prepend(KeyValuePair.Create((TKey?)default, _valueForDefaultKey))
+            ? innerNullable.Prepend(new KeyValuePair<TKey?, TValue>(default, _valueForDefaultKey))
             : innerNullable;
         return keyValuePairs.GetEnumerator();
     }
