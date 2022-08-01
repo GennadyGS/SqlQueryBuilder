@@ -12,7 +12,7 @@
       "allowCommonHungarianPrefixes": true,
       "includeInferredTupleElementNames": true,
       "tupleElementNameCasing": "camelCase"
-      "allowedHungarianPrefixes": ["pb", "cf", "db", "id", "sp", "us", "na", "db", "au", "co", "nn", "nc"]
+      "allowedHungarianPrefixes": []
     },
     "orderingRules": {
       "systemUsingDirectivesFirst": false,
