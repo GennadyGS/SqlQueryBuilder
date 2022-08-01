@@ -54,15 +54,17 @@ public sealed class SqlQueryBuilderTests
             outerQueryBuilder.GetParameters());
     }
 
-    [Fact]
-    public void ShouldReturnCorrectQueryAndParameters()
+    [Theory]
+    [InlineData(123)]
+    [InlineData("abc")]
+    public void ShouldReturnCorrectQueryAndParameters(object value)
     {
-        SqlQueryBuilder queryBuilder = $"SELECT * FROM Orders WHERE Id = {123}";
+        SqlQueryBuilder queryBuilder = $"SELECT * FROM Orders WHERE Id = {value}";
 
         var (query, parameters) = queryBuilder.GetQueryAndParameters();
         
         Assert.Equal("SELECT * FROM Orders WHERE Id = @p1", query);
-        Assert.Equal(new Dictionary<string, object?> { ["p1"] = 123 }, parameters);
+        Assert.Equal(new Dictionary<string, object?> { ["p1"] = value }, parameters);
     }
 
     [Fact]
