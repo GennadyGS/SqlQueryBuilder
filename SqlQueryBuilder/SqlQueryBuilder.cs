@@ -19,7 +19,10 @@ public sealed class SqlQueryBuilder
     /// <summary>Creates a handler used to translate an interpolated string into a <see cref="string"/>.</summary>
     /// <param name="literalLength">The number of constant characters outside of interpolation expressions in the interpolated string.</param>
     /// <param name="formattedCount">The number of interpolation expressions in the interpolated string.</param>
-    /// <remarks>This is intended to be called only by compiler-generated code. Arguments are not validated as they'd otherwise be for members intended to be used directly.</remarks>
+    /// <remarks>
+    /// This is intended to be called only by compiler-generated code.
+    /// Arguments are not validated as they'd otherwise be for members intended to be used directly.
+    /// </remarks>
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
         "Style",
         "IDE0060:Remove unused parameter",
