@@ -211,15 +211,18 @@ public sealed class SqlQueryBuilder
             var (xValue, yValue) => xValue.Equals(yValue),
         };
 
-    private abstract class Entry
+    private class Entry
     {
+        protected Entry()
+        {
+        }
     }
 
     private sealed class LiteralEntry : Entry
     {
         public LiteralEntry(string @string)
         {
-            this.String = @string;
+            String = @string;
         }
 
         public string String { get; }
@@ -229,7 +232,7 @@ public sealed class SqlQueryBuilder
     {
         public ParameterEntry(object? value)
         {
-            this.Value = value;
+            Value = value;
         }
 
         public object? Value { get; }
