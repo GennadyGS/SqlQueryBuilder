@@ -4,7 +4,8 @@ using System.Diagnostics.CodeAnalysis;
 namespace SqlQueryBuilder.Utils;
 
 internal sealed class DictionaryWithNullableKey<TKey, TValue>
-    : IReadOnlyDictionary<TKey?, TValue> where TKey : notnull
+    : IReadOnlyDictionary<TKey?, TValue>
+    where TKey : notnull
 {
     private readonly IReadOnlyDictionary<TKey, TValue> _inner;
     private readonly bool _hasDefaultKey;

@@ -8,7 +8,8 @@ internal static class EnumerableExtensions
     public static IReadOnlyDictionary<TKey?, TValue>
         ToDictionaryWithNullableKey<TSource, TKey, TValue>(
         this IEnumerable<TSource> source,
-        Func<TSource, TKey?> keySelector, Func<TSource, TValue> valueSelector,
+        Func<TSource, TKey?> keySelector,
+        Func<TSource, TValue> valueSelector,
         IEqualityComparer<TKey?>? equalityComparer = null)
         where TKey : notnull
     {
