@@ -64,8 +64,8 @@ public sealed class SqlQueryBuilder
                     stringBuilder.Append(ParameterTag);
                     stringBuilder.Append(parameterValueToNameMap[parameterEntry.Value]);
                     break;
-                case StringEntry stringEntry:
-                    stringBuilder.Append(stringEntry.String);
+                case LiteralEntry literalEntry:
+                    stringBuilder.Append(literalEntry.String);
                     break;
                 default:
                     throw new InvalidOperationException("Impossible case");
@@ -103,7 +103,7 @@ public sealed class SqlQueryBuilder
     /// <param name="value">The value to write.</param>
     public void AppendLiteral(string value)
     {
-        _entries.Add(new StringEntry(value));
+        _entries.Add(new LiteralEntry(value));
     }
 
     /// <summary>Writes the specified value to the handler.</summary>
@@ -199,7 +199,7 @@ public sealed class SqlQueryBuilder
 
     private abstract record Entry;
 
-    private sealed record StringEntry(string String) : Entry;
+    private sealed record LiteralEntry(string String) : Entry;
 
     private sealed record ParameterEntry(object? Value) : Entry;
 }
