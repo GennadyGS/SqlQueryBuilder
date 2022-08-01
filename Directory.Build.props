@@ -1,5 +1,7 @@
 <Project>
-    <PropertyGroup>
-        <CodeAnalysisRuleSet>$(SolutionDir)\ruleset\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
-    </PropertyGroup>
+  <PropertyGroup>
+    <Version>1.0.5</Version>
+    <CodeAnalysisRuleSet>$(SolutionDir)\ruleset\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
 </Project>

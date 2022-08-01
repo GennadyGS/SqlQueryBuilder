@@ -4,7 +4,8 @@ using System.Diagnostics.CodeAnalysis;
 namespace SqlQueryBuilder.Utils;
 
 internal sealed class DictionaryWithNullableKey<TKey, TValue>
-    : IReadOnlyDictionary<TKey?, TValue> where TKey : notnull
+    : IReadOnlyDictionary<TKey?, TValue>
+    where TKey : notnull
 {
     private readonly IReadOnlyDictionary<TKey, TValue> _inner;
     private readonly bool _hasDefaultKey;
@@ -16,7 +17,7 @@ internal sealed class DictionaryWithNullableKey<TKey, TValue>
         IEqualityComparer<TKey?>? equalityComparer = null)
     {
         _equalityComparer = equalityComparer ?? EqualityComparer<TKey?>.Default;
-        
+
         var defaultKeyValuePairs = keyValuePairs
             .Where(kvp => _equalityComparer.Equals(kvp.Key, default))
             .ToList();
@@ -35,7 +36,6 @@ internal sealed class DictionaryWithNullableKey<TKey, TValue>
             .Where(kvp => !_equalityComparer.Equals(kvp.Key, default))
             .Select(kvp => new KeyValuePair<TKey, TValue>(kvp.Key!, kvp.Value))
             .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-
     }
 
     public int Count =>
@@ -59,8 +59,8 @@ internal sealed class DictionaryWithNullableKey<TKey, TValue>
             : throw new KeyNotFoundException($"Key {key} is not found in dictionary");
 
     [SuppressMessage(
-        "Minor Code Smell", 
-        "S1905:Redundant casts should not be used", 
+        "Minor Code Smell",
+        "S1905:Redundant casts should not be used",
         Justification = "Bug in analyzer: cast is required")]
     public IEnumerator<KeyValuePair<TKey?, TValue>> GetEnumerator()
     {
