@@ -64,8 +64,8 @@ public sealed class SqlQueryBuilder
                     stringBuilder.Append(ParameterTag);
                     stringBuilder.Append(parameterValueToNameMap[parameterEntry.Value]);
                     break;
-                case StringEntry stringEntry:
-                    stringBuilder.Append(stringEntry.String);
+                case LiteralEntry literalEntry:
+                    stringBuilder.Append(literalEntry.String);
                     break;
                 default:
                     throw new InvalidOperationException("Impossible case");
@@ -103,7 +103,7 @@ public sealed class SqlQueryBuilder
     /// <param name="value">The value to write.</param>
     public void AppendLiteral(string value)
     {
-        _entries.Add(new StringEntry(value));
+        _entries.Add(new LiteralEntry(value));
     }
 
     /// <summary>Writes the specified value to the handler.</summary>
@@ -126,6 +126,16 @@ public sealed class SqlQueryBuilder
         {
             _entries.Add(new ParameterEntry(default));
         }
+    }
+
+    /// <summary>
+    /// Writes the instance of <see cref="FormattedLiteral"/> to the handler
+    /// as inline literal value, rather than as parameter.
+    /// </summary>
+    /// <param name="value">The the instance of <see cref="FormattedLiteral"/> to write.</param>
+    public void AppendFormatted(FormattedLiteral value)
+    {
+        _entries.Add(new LiteralEntry(value.String));
     }
 
     /// <summary>
@@ -201,34 +211,24 @@ public sealed class SqlQueryBuilder
     {
     }
 
-    private sealed class StringEntry : Entry
+    private sealed class LiteralEntry : Entry
     {
-        public StringEntry(string String)
+        public LiteralEntry(string @string)
         {
-            this.String = String;
+            this.String = @string;
         }
 
         public string String { get; }
-
-        public void Deconstruct(out string String)
-        {
-            String = this.String;
-        }
     }
 
     private sealed class ParameterEntry : Entry
     {
-        public ParameterEntry(object? Value)
+        public ParameterEntry(object? value)
         {
-            this.Value = Value;
+            this.Value = value;
         }
 
         public object? Value { get; }
-
-        public void Deconstruct(out object? Value)
-        {
-            Value = this.Value;
-        }
     }
 }
  
