@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace SqlQueryBuilder.UnitTests;
+namespace SqlQueryBuilders.UnitTests;
 
 public sealed class SqlQueryBuilderTests
 {
@@ -106,16 +106,31 @@ public sealed class SqlQueryBuilderTests
     }
 
     [Fact]
-    public void ShouldSupportParametersAsLiterals()
+    public void ShouldInlineLiteralsCorrectly()
     {
         // Table name should be interpreted as inline literal string, rather than as parameter
-        const string tableName = "Orders";
-        SqlQueryBuilder queryBuilder = $"SELECT * FROM {tableName.AsLiteral()} WHERE Id = {123}";
+        SqlQueryBuilder tableName = "Orders";
+        SqlQueryBuilder queryBuilder = $"SELECT * FROM {tableName} WHERE Id = {123}";
 
         var (query, parameters) = queryBuilder.GetQueryAndParameters();
 
         Assert.Equal("SELECT * FROM Orders WHERE Id = @p1", query);
         Assert.Equal(new Dictionary<string, object?> { ["p1"] = 123 }, parameters);
+    }
+
+    [Fact]
+    public void ShouldBeCreatedFromSingleParameterCorrectly()
+    {
+        // Building SQL query with parameters provided as nested SqlQueryBuilder
+        var param = SqlQueryBuilder.FromParameter(123);
+        SqlQueryBuilder queryBuilder = $"SELECT * FROM Orders WHERE Id = {param}";
+
+        Assert.Equal(
+            "SELECT * FROM Orders WHERE Id = @p1",
+            queryBuilder.GetQuery());
+        Assert.Equal(
+            new Dictionary<string, object?> { ["p1"] = 123 },
+            queryBuilder.GetParameters());
     }
 
     [Fact]

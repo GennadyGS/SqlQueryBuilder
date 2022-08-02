@@ -1,4 +1,4 @@
-﻿namespace SqlQueryBuilder.Utils;
+﻿namespace SqlQueryBuilders.Utils;
 
 internal static class EnumerableExtensions
 {

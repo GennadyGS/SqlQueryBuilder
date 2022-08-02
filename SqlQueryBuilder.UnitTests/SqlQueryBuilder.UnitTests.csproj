@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
 
     <IsPackable>false</IsPackable>
+    <RootNamespace>SqlQueryBuilders.UnitTests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

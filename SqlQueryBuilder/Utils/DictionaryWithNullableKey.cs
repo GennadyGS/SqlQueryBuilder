@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace SqlQueryBuilder.Utils;
+namespace SqlQueryBuilders.Utils;
 
 internal sealed class DictionaryWithNullableKey<TKey, TValue>
     : IReadOnlyDictionary<TKey?, TValue>
