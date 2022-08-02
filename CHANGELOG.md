@@ -1,3 +1,8 @@
+## 1.1.1
+- Rename root namespace to avoid conflict with class name
+- Add method SqlQueryBuilder.FromParameter for creating SqlQueryBuilder with single parameter
+- Remove support for inline literal parameters as redundant API
+
 ## 1.0.5
 - Support inline literal parameters
 
