@@ -209,7 +209,7 @@ public sealed class SqlQueryBuilder
         {
             (null, null) => true,
             (null, _) => false,
-            var (xValue, yValue) => xValue.Equals(yValue),
+            var (valueX, valueY) => valueX.Equals(valueY),
         };
 
     private class Entry
