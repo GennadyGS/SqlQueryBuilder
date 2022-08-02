@@ -12,6 +12,7 @@
     <Description>Utility class for building SQL queries with parameters based on C# string interpolation.</Description>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RootNamespace>SqlQueryBuilders</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

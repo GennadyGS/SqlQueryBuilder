@@ -1,8 +1,8 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Text;
-using SqlQueryBuilder.Utils;
+using SqlQueryBuilders.Utils;
 
-namespace SqlQueryBuilder;
+namespace SqlQueryBuilders;
 
 /// <summary>
 /// Builds SQL query with parameters from interpolated string.

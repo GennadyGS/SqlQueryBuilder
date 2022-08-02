@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace SqlQueryBuilder.UnitTests;
+namespace SqlQueryBuilders.UnitTests;
 
 public sealed class SqlQueryBuilderTests
 {
