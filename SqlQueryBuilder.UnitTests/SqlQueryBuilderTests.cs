@@ -119,6 +119,21 @@ public sealed class SqlQueryBuilderTests
     }
 
     [Fact]
+    public void ShouldBeCreatedFromSingleParameterCorrectly()
+    {
+        // Building SQL query with parameters provided as nested SqlQueryBuilder
+        var param = SqlQueryBuilder.FromParameter(123);
+        SqlQueryBuilder queryBuilder = $"SELECT * FROM Orders WHERE Id = {param}";
+
+        Assert.Equal(
+            "SELECT * FROM Orders WHERE Id = @p1",
+            queryBuilder.GetQuery());
+        Assert.Equal(
+            new Dictionary<string, object?> { ["p1"] = 123 },
+            queryBuilder.GetParameters());
+    }
+
+    [Fact]
     public void ShouldSupportMetadata()
     {
         // Building SQL query with metadata

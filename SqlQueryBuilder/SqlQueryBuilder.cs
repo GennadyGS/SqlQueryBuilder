@@ -49,6 +49,18 @@ public sealed class SqlQueryBuilder
     public static implicit operator SqlQueryBuilder(string s) => new(s);
 
     /// <summary>
+    /// Creates new instance of <see cref="SqlQueryBuilder"/> containing the single parameter.
+    /// </summary>
+    /// <param name="value">The value of parameter.</param>
+    /// <returns>Instance of <see cref="SqlQueryBuilder"/>.</returns>
+    public static SqlQueryBuilder FromParameter(object? value)
+    {
+        var result = new SqlQueryBuilder(0, 1);
+        result.AppendFormatted(value);
+        return result;
+    }
+
+    /// <summary>
     /// Gets the text of SQL query with inlined parameters.
     /// </summary>
     /// <returns>The text of SQL query with inlined parameters.</returns>
@@ -116,14 +128,6 @@ public sealed class SqlQueryBuilder
         _entries.Add(new LiteralEntry(value));
     }
 
-    /// <summary>Writes the specified value to the handler.</summary>
-    /// <param name="value">The value to write.</param>
-    /// <typeparam name="T">The type of <paramref name="value"/>.</typeparam>
-    public void AppendFormatted<T>(T? value)
-    {
-        _entries.Add(new ParameterEntry(value));
-    }
-
     /// <summary>Writes the instance of <see cref="SqlQueryBuilder"/> to the handler.</summary>
     /// <param name="value">The the instance of <see cref="SqlQueryBuilder"/> to write.</param>
     public void AppendFormatted(SqlQueryBuilder? value)
@@ -137,6 +141,13 @@ public sealed class SqlQueryBuilder
         {
             _entries.Add(new ParameterEntry(default));
         }
+    }
+
+    /// <summary>Writes the specified value to the handler.</summary>
+    /// <param name="value">The value to write.</param>
+    public void AppendFormatted(object? value)
+    {
+        _entries.Add(new ParameterEntry(value));
     }
 
     /// <summary>
