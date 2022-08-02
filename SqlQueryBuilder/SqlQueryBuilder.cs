@@ -140,16 +140,6 @@ public sealed class SqlQueryBuilder
     }
 
     /// <summary>
-    /// Writes the instance of <see cref="FormattedLiteral"/> to the handler
-    /// as inline literal value, rather than as parameter.
-    /// </summary>
-    /// <param name="value">The the instance of <see cref="FormattedLiteral"/> to write.</param>
-    public void AppendFormatted(FormattedLiteral value)
-    {
-        _entries.Add(new LiteralEntry(value.String));
-    }
-
-    /// <summary>
     /// Adds metadata entry to query.
     /// </summary>
     /// <remarks>
