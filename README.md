@@ -26,8 +26,8 @@ Assert.Equal(
     outerQueryBuilder.GetParameters());
 
 // Table name should be interpreted as inline literal string, rather than as parameter
-const string tableName = "Orders";
-SqlQueryBuilder queryBuilder = $"SELECT * FROM {tableName.AsLiteral()} WHERE Id = {123}";
+SqlQueryBuilder tableName = "Orders";
+SqlQueryBuilder queryBuilder = $"SELECT * FROM {tableName} WHERE Id = {123}";
 
 var (query, parameters) = queryBuilder.GetQueryAndParameters();
 
