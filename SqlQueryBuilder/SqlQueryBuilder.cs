@@ -31,22 +31,34 @@ public sealed class SqlQueryBuilder
     {
     }
 
-    private SqlQueryBuilder(string s)
-    {
-        AppendLiteral(s);
-    }
-
     /// <summary>
     /// Gets the metadata.
     /// </summary>
     public IReadOnlyDictionary<string, object?> Metadata => _metadata;
 
     /// <summary>
-    /// Implicitly converts <see cref="string"/> into instance of <see cref="SqlQueryBuilder"/>.
+    /// Explicitly converts <see cref="string"/> into instance of <see cref="SqlQueryBuilder"/>.
     /// </summary>
-    /// <param name="s">The string to convert.</param>
+    /// <param name="value">The string to convert.</param>
     /// <returns>The instance of instance of <see cref="SqlQueryBuilder"/>.</returns>
-    public static implicit operator SqlQueryBuilder(string s) => new(s);
+    public static explicit operator SqlQueryBuilder(string value) => FromLiteral(value);
+
+    /// <summary>
+    /// Creates new instance of <see cref="SqlQueryBuilder"/> containing the literal string.
+    /// </summary>
+    /// <param name="value">The value of literal.</param>
+    /// <returns>Instance of <see cref="SqlQueryBuilder"/>.</returns>
+    public static SqlQueryBuilder FromLiteral(string value)
+    {
+        if (value == null)
+        {
+            throw new ArgumentNullException(nameof(value));
+        }
+
+        var result = new SqlQueryBuilder(literalLength: value.Length, formattedCount: 0);
+        result.AppendLiteral(value);
+        return result;
+    }
 
     /// <summary>
     /// Creates new instance of <see cref="SqlQueryBuilder"/> containing the single parameter.
@@ -55,7 +67,7 @@ public sealed class SqlQueryBuilder
     /// <returns>Instance of <see cref="SqlQueryBuilder"/>.</returns>
     public static SqlQueryBuilder FromParameter(object? value)
     {
-        var result = new SqlQueryBuilder(0, 1);
+        var result = new SqlQueryBuilder(literalLength: 0, formattedCount: 1);
         result.AppendFormatted(value);
         return result;
     }
