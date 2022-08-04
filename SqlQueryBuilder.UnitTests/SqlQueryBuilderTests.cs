@@ -7,9 +7,18 @@ namespace SqlQueryBuilders.UnitTests;
 public sealed class SqlQueryBuilderTests
 {
     [Fact]
-    public void ShouldBeImplicitlyCastFromString()
+    public void ShouldBeExplicitlyCastFromString()
     {
-        SqlQueryBuilder queryBuilder = "SELECT * FROM Orders WHERE Id = 123";
+        var queryBuilder = (SqlQueryBuilder)"SELECT * FROM Orders WHERE Id = 123";
+
+        Assert.Equal("SELECT * FROM Orders WHERE Id = 123", queryBuilder.GetQuery());
+        Assert.Empty(queryBuilder.GetParameters());
+    }
+
+    [Fact]
+    public void ShouldBeExplicitlyCastFromInterpolatedString()
+    {
+        var queryBuilder = (SqlQueryBuilder)$"SELECT * FROM Orders WHERE Id = 123";
 
         Assert.Equal("SELECT * FROM Orders WHERE Id = 123", queryBuilder.GetQuery());
         Assert.Empty(queryBuilder.GetParameters());
@@ -109,8 +118,8 @@ public sealed class SqlQueryBuilderTests
     public void ShouldInlineLiteralsCorrectly()
     {
         // Table name should be interpreted as inline literal string, rather than as parameter
-        SqlQueryBuilder tableName = "Orders";
-        SqlQueryBuilder queryBuilder = $"SELECT * FROM {tableName} WHERE Id = {123}";
+        var tableNameQueryBuilder = (SqlQueryBuilder)"Orders";
+        SqlQueryBuilder queryBuilder = $"SELECT * FROM {tableNameQueryBuilder} WHERE Id = {123}";
 
         var (query, parameters) = queryBuilder.GetQueryAndParameters();
 
@@ -196,5 +205,11 @@ public sealed class SqlQueryBuilderTests
                 .AddMetadata("a", 1)
                 .AddMetadata("c", 3);
         });
+    }
+
+    [Fact]
+    public void ShouldThrowArgumentNullException_WhenConvertedFromNullString()
+    {
+        Assert.Throws<ArgumentNullException>(() => (SqlQueryBuilder)(string)null!);
     }
 }
