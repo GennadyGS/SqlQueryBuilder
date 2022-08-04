@@ -216,6 +216,12 @@ public sealed class SqlQueryBuilder
         return this;
     }
 
+    /// <summary>
+    /// Converts into <see cref="string"/> containing the text of SQL query.
+    /// </summary>
+    /// <returns>The text of SQL query.</returns>
+    public override string ToString() => GetQuery();
+
     private static bool ObjectsEqual(object? x, object? y) =>
         (x, y) switch
         {
