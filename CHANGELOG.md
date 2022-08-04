@@ -1,3 +1,7 @@
+## 1.1.2
+- Require explicit converting of SqlQueryBuilder from string to avoid ambiguity
+- Support ToString in SqlQueryBuilder
+
 ## 1.1.1
 - Rename root namespace to avoid conflict with class name
 - Add method SqlQueryBuilder.FromParameter for creating SqlQueryBuilder with single parameter
