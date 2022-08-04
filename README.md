@@ -7,27 +7,27 @@ Utility class for building SQL queries with parameters based on C# string interp
 SqlQueryBuilder queryBuilder = $"SELECT * FROM Orders WHERE Id = {123}";
 
 Assert.Equal(
-    "SELECT * FROM Orders WHERE Id = @p1", 
+    "SELECT * FROM Orders WHERE Id = @p1",
     queryBuilder.GetQuery());
 Assert.Equal(
-    new Dictionary<string, object?> { ["p1"] = 123 }, 
+    new Dictionary<string, object?> { ["p1"] = 123 },
     queryBuilder.GetParameters());
 
 // Composing SQL queries with parameters
 SqlQueryBuilder innerQueryBuilder = $"SELECT * FROM Orders WHERE Id = {123}";
-SqlQueryBuilder outerQueryBuilder = 
+SqlQueryBuilder outerQueryBuilder =
     $"SELECT * FROM ({innerQueryBuilder}) src WHERE IsValid = {true}";
 
 Assert.Equal(
     "SELECT * FROM (SELECT * FROM Orders WHERE Id = @p1) src WHERE IsValid = @p2",
     outerQueryBuilder.GetQuery());
 Assert.Equal(
-    new Dictionary<string, object?> { ["p1"] = 123, ["p2"] = true }, 
+    new Dictionary<string, object?> { ["p1"] = 123, ["p2"] = true },
     outerQueryBuilder.GetParameters());
 
 // Table name should be interpreted as inline literal string, rather than as parameter
-SqlQueryBuilder tableName = "Orders";
-SqlQueryBuilder queryBuilder = $"SELECT * FROM {tableName} WHERE Id = {123}";
+var tableNameQueryBuilder = (SqlQueryBuilder)"Orders";
+SqlQueryBuilder queryBuilder = $"SELECT * FROM {tableNameQueryBuilder} WHERE Id = {123}";
 
 var (query, parameters) = queryBuilder.GetQueryAndParameters();
 
