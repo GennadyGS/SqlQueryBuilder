@@ -12,7 +12,8 @@ public sealed class SqlQueryBuilder
 {
     private const char ParameterTag = '@';
     private const string DefaultParameterNamePrefix = "p";
-
+    private const string LiteralFormatTag = "l";
+    private const string ParameterFormatTag = "p";
     private readonly List<Entry> _entries = new();
     private readonly Dictionary<string, object?> _metadata = new();
 
@@ -153,6 +154,20 @@ public sealed class SqlQueryBuilder
         {
             _entries.Add(new ParameterEntry(default));
         }
+    }
+
+    /// <summary>Writes the specified value to the handler.</summary>
+    /// <param name="value">The value to write.</param>
+    /// <param name="format">The format tag: "l" - literal; "p"(default) - parameter.</param>
+    public void AppendFormatted(string value, string? format = null)
+    {
+        var entry = format switch
+        {
+            LiteralFormatTag => (Entry)new LiteralEntry(value),
+            ParameterFormatTag or null => (Entry)new ParameterEntry(value),
+            _ => throw new FormatException($"Invalid format: '{format}'"),
+        };
+        _entries.Add(entry);
     }
 
     /// <summary>Writes the specified value to the handler.</summary>

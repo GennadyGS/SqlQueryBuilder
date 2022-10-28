@@ -115,11 +115,23 @@ public sealed class SqlQueryBuilderTests
     }
 
     [Fact]
-    public void ShouldInlineLiteralsCorrectly()
+    public void ShouldInlineLiteralsAsNestedQueriesCorrectly()
     {
         // Table name should be interpreted as inline literal string, rather than as parameter
         var tableNameQueryBuilder = (SqlQueryBuilder)"Orders";
         SqlQueryBuilder queryBuilder = $"SELECT * FROM {tableNameQueryBuilder} WHERE Id = {123}";
+
+        var (query, parameters) = queryBuilder.GetQueryAndParameters();
+
+        Assert.Equal("SELECT * FROM Orders WHERE Id = @p1", query);
+        Assert.Equal(new Dictionary<string, object?> { ["p1"] = 123 }, parameters);
+    }
+
+    [Fact]
+    public void ShouldInlineLiteralsCorrectly()
+    {
+        // Table name should be interpreted as inline literal string, rather than as parameter
+        SqlQueryBuilder queryBuilder = $"SELECT * FROM {"Orders":l} WHERE Id = {123}";
 
         var (query, parameters) = queryBuilder.GetQueryAndParameters();
 
