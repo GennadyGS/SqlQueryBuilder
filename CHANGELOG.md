@@ -1,3 +1,6 @@
+## 1.1.3
+- Support formats "l" and "p" for string parameters to simplify inlining string literals
+
 ## 1.1.2
 - Require explicit converting of SqlQueryBuilder from string to avoid ambiguity
 - Support ToString in SqlQueryBuilder
