@@ -117,7 +117,7 @@ public sealed class SqlQueryBuilderTests
     [Fact]
     public void ShouldInlineLiteralsCorrectly()
     {
-        // Table name should be interpreted as inline literal string, rather than as parameter
+        // Inline table name as literal string by specifying the "l" format
         var tableName = "Orders";
         SqlQueryBuilder queryBuilder = $"SELECT * FROM {tableName:l} WHERE Id = {123}";
 
@@ -130,7 +130,7 @@ public sealed class SqlQueryBuilderTests
     [Fact]
     public void ShouldInlineLiteralsAsNestedQueriesCorrectly()
     {
-        // Table name should be interpreted as inline literal string, rather than as parameter
+        // Inline table name as literal string by converting it to SqlQueryBuilder
         var tableNameQueryBuilder = (SqlQueryBuilder)"Orders";
         SqlQueryBuilder queryBuilder = $"SELECT * FROM {tableNameQueryBuilder} WHERE Id = {123}";
 

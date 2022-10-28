@@ -25,9 +25,9 @@ Assert.Equal(
     new Dictionary<string, object?> { ["p1"] = 123, ["p2"] = true },
     outerQueryBuilder.GetParameters());
 
-// Table name should be interpreted as inline literal string, rather than as parameter
-var tableNameQueryBuilder = (SqlQueryBuilder)"Orders";
-SqlQueryBuilder queryBuilder = $"SELECT * FROM {tableNameQueryBuilder} WHERE Id = {123}";
+// Inline table name as literal string by specifying the "l" format
+var tableName = "Orders";
+SqlQueryBuilder queryBuilder = $"SELECT * FROM {tableName:l} WHERE Id = {123}";
 
 var (query, parameters) = queryBuilder.GetQueryAndParameters();
 
