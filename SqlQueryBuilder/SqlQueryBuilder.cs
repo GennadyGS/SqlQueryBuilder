@@ -141,6 +141,15 @@ public sealed class SqlQueryBuilder
         _entries.Add(new LiteralEntry(value));
     }
 
+    /// <summary>
+    /// Adds parameter to the handler.
+    /// </summary>
+    /// <param name="value">The parameter value to write.</param>
+    public void AppendParameter(object? value)
+    {
+        _entries.Add(new ParameterEntry(value));
+    }
+
     /// <summary>Writes the instance of <see cref="SqlQueryBuilder"/> to the handler.</summary>
     /// <param name="value">The the instance of <see cref="SqlQueryBuilder"/> to write.</param>
     public void AppendFormatted(SqlQueryBuilder? value)
@@ -152,7 +161,7 @@ public sealed class SqlQueryBuilder
         }
         else
         {
-            _entries.Add(new ParameterEntry(default));
+            AppendParameter(default);
         }
     }
 
@@ -164,7 +173,7 @@ public sealed class SqlQueryBuilder
         var entry = format switch
         {
             LiteralFormatTag => (Entry)new LiteralEntry(value),
-            ParameterFormatTag or null => (Entry)new ParameterEntry(value),
+            ParameterFormatTag or null => new ParameterEntry(value),
             _ => throw new FormatException($"Invalid format: '{format}'"),
         };
         _entries.Add(entry);
@@ -174,7 +183,7 @@ public sealed class SqlQueryBuilder
     /// <param name="value">The value to write.</param>
     public void AppendFormatted(object? value)
     {
-        _entries.Add(new ParameterEntry(value));
+        AppendParameter(value);
     }
 
     /// <summary>
