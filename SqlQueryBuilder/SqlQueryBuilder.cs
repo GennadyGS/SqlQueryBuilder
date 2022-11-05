@@ -8,7 +8,7 @@ namespace SqlQueryBuilders;
 /// Builds SQL query with parameters from interpolated string.
 /// </summary>
 [InterpolatedStringHandler]
-public sealed class SqlQueryBuilder
+public readonly struct SqlQueryBuilder
 {
     private const char ParameterTag = '@';
     private const string DefaultParameterNamePrefix = "p";
@@ -152,17 +152,10 @@ public sealed class SqlQueryBuilder
 
     /// <summary>Writes the instance of <see cref="SqlQueryBuilder"/> to the handler.</summary>
     /// <param name="value">The the instance of <see cref="SqlQueryBuilder"/> to write.</param>
-    public void AppendFormatted(SqlQueryBuilder? value)
+    public void AppendFormatted(SqlQueryBuilder value)
     {
-        if (value != default)
-        {
-            _entries.AddRange(value._entries);
-            AddMetadata(value._metadata);
-        }
-        else
-        {
-            AppendParameter(default);
-        }
+        _entries.AddRange(value._entries);
+        AddMetadata(value._metadata);
     }
 
     /// <summary>Writes the specified value to the handler.</summary>
