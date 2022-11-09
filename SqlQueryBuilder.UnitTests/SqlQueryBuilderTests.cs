@@ -119,7 +119,8 @@ public sealed class SqlQueryBuilderTests
     public void ShouldReuseNullParametersWithTheSameValue()
     {
         SqlQueryBuilder queryBuilder =
-            $"SELECT * FROM Orders WHERE Id = {123} AND IsValid = {null} AND Amount = {null}";
+            $"SELECT * FROM Orders"
+            + $" WHERE Id = {123} AND IsValid = {(object?)null} AND Amount = {(object?)null}";
 
         var (query, parameters) = queryBuilder.GetQueryAndParameters();
 
