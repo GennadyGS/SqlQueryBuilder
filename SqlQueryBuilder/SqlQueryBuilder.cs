@@ -14,7 +14,7 @@ public readonly struct SqlQueryBuilder
     private const string DefaultParameterNamePrefix = "p";
     private const string LiteralFormatTag = "l";
     private const string ParameterFormatTag = "p";
-    private readonly List<Entry> _entries = new();
+    private readonly List<Entry> _entries;
     private readonly Dictionary<string, object?> _metadata = new();
 
     /// <summary>Creates a handler used to translate an interpolated string into a <see cref="string"/>.</summary>
@@ -30,6 +30,7 @@ public readonly struct SqlQueryBuilder
         Justification = "Constructor with following parameter is required for InterpolatedStringHandler")]
     public SqlQueryBuilder(int literalLength, int formattedCount)
     {
+        _entries = new((formattedCount * 2) + 1);
     }
 
     /// <summary>
@@ -99,7 +100,8 @@ public readonly struct SqlQueryBuilder
     public (string query, IReadOnlyDictionary<string, object?> parameters) GetQueryAndParameters(
         string parameterNamePrefix = DefaultParameterNamePrefix)
     {
-        var parameterValueToNameMap = _entries
+        var leafEntries = _entries.SelectMany(GetLeafEntries).ToList();
+        var parameterValueToNameMap = leafEntries
             .OfType<ParameterEntry>()
             .Select(entry => entry.Value)
             .Distinct()
@@ -108,26 +110,10 @@ public readonly struct SqlQueryBuilder
                 item => item.value,
                 item => parameterNamePrefix + (item.index + 1));
 
-        void AppendEntryToStringBuilder(Entry entry, StringBuilder stringBuilder)
-        {
-            switch (entry)
-            {
-                case ParameterEntry parameterEntry:
-                    stringBuilder.Append(ParameterTag);
-                    stringBuilder.Append(parameterValueToNameMap[parameterEntry.Value]);
-                    break;
-                case LiteralEntry literalEntry:
-                    stringBuilder.Append(literalEntry.String);
-                    break;
-                default:
-                    throw new InvalidOperationException("Impossible case");
-            }
-        }
-
         var queryBuilder = new StringBuilder();
-        foreach (var entry in _entries)
+        foreach (var entry in leafEntries)
         {
-            AppendEntryToStringBuilder(entry, queryBuilder);
+            AppendLeafEntryToStringBuilder(entry, queryBuilder, parameterValueToNameMap);
         }
 
         var parameters = parameterValueToNameMap.ToDictionary(kvp => kvp.Value, kvp => kvp.Key);
@@ -154,7 +140,7 @@ public readonly struct SqlQueryBuilder
     /// <param name="value">The the instance of <see cref="SqlQueryBuilder"/> to write.</param>
     public void AppendFormatted(SqlQueryBuilder value)
     {
-        _entries.AddRange(value._entries);
+        _entries.Add(new CompositeEntry(value._entries));
         AddMetadata(value._metadata);
     }
 
@@ -239,6 +225,47 @@ public readonly struct SqlQueryBuilder
     /// <returns>The text of SQL query.</returns>
     public override string ToString() => GetQuery();
 
+    private static IEnumerable<Entry> GetLeafEntries(Entry entry)
+    {
+        switch (entry)
+        {
+            case ParameterEntry parameterEntry:
+                yield return parameterEntry;
+                yield break;
+            case LiteralEntry literalEntry:
+                yield return literalEntry;
+                yield break;
+            case CompositeEntry compositeEntry:
+                foreach (var innerEntry in compositeEntry.Entries)
+                {
+                    yield return innerEntry;
+                }
+
+                yield break;
+            default:
+                throw new InvalidOperationException("Impossible case");
+        }
+    }
+
+    private static void AppendLeafEntryToStringBuilder(
+        Entry entry,
+        StringBuilder stringBuilder,
+        IReadOnlyDictionary<object?, string> parameterValueToNameMap)
+    {
+        switch (entry)
+        {
+            case ParameterEntry parameterEntry:
+                stringBuilder.Append(ParameterTag);
+                stringBuilder.Append(parameterValueToNameMap[parameterEntry.Value]);
+                break;
+            case LiteralEntry literalEntry:
+                stringBuilder.Append(literalEntry.String);
+                break;
+            default:
+                throw new InvalidOperationException("Impossible case");
+        }
+    }
+
     private static bool ObjectsEqual(object? x, object? y) =>
         (x, y) switch
         {
@@ -252,4 +279,6 @@ public readonly struct SqlQueryBuilder
     private sealed record LiteralEntry(string String) : Entry;
 
     private sealed record ParameterEntry(object? Value) : Entry;
+
+    private sealed record CompositeEntry(IReadOnlyCollection<Entry> Entries) : Entry;
 }
