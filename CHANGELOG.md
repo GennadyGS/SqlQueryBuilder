@@ -1,4 +1,4 @@
-## 1.2.1
+## 1.2.2
 - Support formats "l" and "p" for string parameters to simplify inlining string literals
 - Convert SqlQueryBuilder from class to struct
 - Reduce heap memory allocations for composite SQL queries
