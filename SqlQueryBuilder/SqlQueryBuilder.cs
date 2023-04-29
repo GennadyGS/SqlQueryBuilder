@@ -49,6 +49,25 @@ public sealed class SqlQueryBuilder : IEquatable<SqlQueryBuilder>
         FromLiteral(value ?? throw new ArgumentNullException(nameof(value)));
 
     /// <summary>
+    /// Compares two instances of <see cref="SqlQueryBuilder"/>.
+    /// </summary>
+    /// <param name="left">The left comparand.</param>
+    /// <param name="right">The right comparand.</param>
+    /// <returns><value>true</value> if instances are equal or false otherwise.</returns>
+    public static bool operator ==(SqlQueryBuilder? left, SqlQueryBuilder? right) =>
+        Equals(left, right);
+
+    /// <summary>
+    /// Compares two instances of <see cref="SqlQueryBuilder"/>.
+    /// </summary>
+    /// <param name="left">The left argument.</param>
+    /// <param name="right">The right argument.</param>
+    /// <returns><value>true</value> if instances are not equal or false otherwise.</returns>
+    public static bool operator !=(SqlQueryBuilder? left, SqlQueryBuilder? right) =>
+        !Equals(left, right);
+        Add(left, right);
+
+    /// <summary>
     /// Creates new instance of <see cref="SqlQueryBuilder"/> containing the literal string.
     /// </summary>
     /// <param name="value">The value of literal.</param>
@@ -230,6 +249,31 @@ public sealed class SqlQueryBuilder : IEquatable<SqlQueryBuilder>
     }
 
     /// <summary>
+    /// Compares two instances of <see cref="SqlQueryBuilder"/>.
+    /// </summary>
+    /// <param name="other">The comparand.</param>
+    /// <returns><value>true</value> if instances are equal or false otherwise.</returns>
+    public bool Equals(SqlQueryBuilder? other) =>
+        other is not null
+        && _entries.SequenceEqual(other._entries)
+        && EqualityHelpers.DictionariesEqual(_metadata, other._metadata);
+
+    /// <summary>
+    /// Compares two instances of <see cref="SqlQueryBuilder"/>.
+    /// </summary>
+    /// <param name="obj">The comparand.</param>
+    /// <returns><value>true</value> if instances are equal or false otherwise.</returns>
+    public override bool Equals(object? obj) =>
+        ReferenceEquals(this, obj) || (obj is SqlQueryBuilder other && Equals(other));
+
+    /// <summary>
+    /// Gets the hash code.
+    /// </summary>
+    /// <returns>The hash code.</returns>
+    public override int GetHashCode() =>
+        HashCode.Combine(_entries, _metadata);
+
+    /// <summary>
     /// Converts into <see cref="string"/> containing the text of SQL query.
     /// </summary>
     /// <returns>The text of SQL query.</returns>
@@ -259,19 +303,23 @@ public sealed class SqlQueryBuilder : IEquatable<SqlQueryBuilder>
         }
     }
 
-    private static bool ObjectsEqual(object? x, object? y) =>
-        (x, y) switch
+    private record Entry
+    {
+        protected Entry()
         {
-            (null, null) => true,
-            (null, _) => false,
-            var (valueX, valueY) => valueX.Equals(valueY),
-        };
-
-    private abstract record Entry;
+        }
+    }
 
     private sealed record LiteralEntry(string String) : Entry;
 
     private sealed record ParameterEntry(object? Value) : Entry;
 
-    private sealed record CompositeEntry(IReadOnlyCollection<Entry> Entries) : Entry;
+    private sealed record CompositeEntry(IReadOnlyCollection<Entry> Entries) : Entry
+    {
+        public bool Equals(CompositeEntry? other) =>
+            other is not null && other.Entries.SequenceEqual(Entries);
+
+        public override int GetHashCode() =>
+            HashCode.Combine(base.GetHashCode(), Entries);
+    }
 }

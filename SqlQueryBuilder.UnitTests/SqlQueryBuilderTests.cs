@@ -262,4 +262,32 @@ public sealed class SqlQueryBuilderTests
     {
         Assert.Throws<ArgumentNullException>(() => (SqlQueryBuilder)(string?)null);
     }
+
+    [Fact]
+    public void Equals_ShouldCompareByValues()
+    {
+        SqlQueryBuilder queryBuilder1 =
+            $"SELECT * FROM (" +
+                $"{(SqlQueryBuilder)$"SELECT * FROM Orders WHERE Id = {123}"}) src " +
+            $"WHERE IsValid = {true}";
+        SqlQueryBuilder queryBuilder2 =
+            $"SELECT * FROM (" +
+            $"{(SqlQueryBuilder)$"SELECT * FROM Orders WHERE Id = {123}"}) src " +
+            $"WHERE IsValid = {true}";
+        Assert.Equal(queryBuilder1, queryBuilder2);
+    }
+
+    [Fact]
+    public void EqualityOperator_ShouldCompareByValues()
+    {
+        SqlQueryBuilder queryBuilder1 =
+            $"SELECT * FROM (" +
+            $"{(SqlQueryBuilder)$"SELECT * FROM Orders WHERE Id = {123}"}) src " +
+            $"WHERE IsValid = {true}";
+        SqlQueryBuilder queryBuilder2 =
+            $"SELECT * FROM (" +
+            $"{(SqlQueryBuilder)$"SELECT * FROM Orders WHERE Id = {123}"}) src " +
+            $"WHERE IsValid = {true}";
+        Assert.True(queryBuilder1 == queryBuilder2);
+    }
 }
