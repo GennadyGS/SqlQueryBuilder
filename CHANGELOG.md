@@ -1,3 +1,9 @@
+## 1.3.1
+- Support concatenation with assignment
+- Support structural equality
+- Convert SqlQueryBuilder back to class from struct
+- Fix: bug in case of nested composition
+
 ## 1.2.2
 - Support formats "l" and "p" for string parameters to simplify inlining string literals
 - Convert SqlQueryBuilder from class to struct
