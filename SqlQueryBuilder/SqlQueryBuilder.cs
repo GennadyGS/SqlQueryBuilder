@@ -9,7 +9,7 @@ namespace SqlQueryBuilders;
 /// Builds SQL query with parameters from interpolated string.
 /// </summary>
 [InterpolatedStringHandler]
-public readonly struct SqlQueryBuilder
+public sealed class SqlQueryBuilder : IEquatable<SqlQueryBuilder>
 {
     private const char ParameterTag = '@';
     private const string DefaultParameterNamePrefix = "p";
@@ -45,7 +45,8 @@ public readonly struct SqlQueryBuilder
     /// </summary>
     /// <param name="value">The string to convert.</param>
     /// <returns>The instance of instance of <see cref="SqlQueryBuilder"/>.</returns>
-    public static explicit operator SqlQueryBuilder(string value) => FromLiteral(value);
+    public static explicit operator SqlQueryBuilder(string? value) =>
+        FromLiteral(value ?? throw new ArgumentNullException(nameof(value)));
 
     /// <summary>
     /// Creates new instance of <see cref="SqlQueryBuilder"/> containing the literal string.
@@ -140,10 +141,17 @@ public readonly struct SqlQueryBuilder
 
     /// <summary>Writes the instance of <see cref="SqlQueryBuilder"/> to the handler.</summary>
     /// <param name="value">The the instance of <see cref="SqlQueryBuilder"/> to write.</param>
-    public void AppendFormatted(SqlQueryBuilder value)
+    public void AppendFormatted(SqlQueryBuilder? value)
     {
-        _entries.Add(new CompositeEntry(value._entries));
-        AddMetadata(value._metadata);
+        if (value is not null)
+        {
+            _entries.Add(new CompositeEntry(value._entries));
+            AddMetadata(value._metadata);
+        }
+        else
+        {
+            AppendParameter(default);
+        }
     }
 
     /// <summary>Writes the specified value to the handler.</summary>
