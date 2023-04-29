@@ -1,6 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Text;
 using SqlQueryBuilders.Utils;
+using WizNG.SqlGeneration.QueryBuilder.Utils;
 
 namespace SqlQueryBuilders;
 
@@ -187,7 +188,7 @@ public readonly struct SqlQueryBuilder
         }
         else
         {
-            if (!ObjectsEqual(value, existingValue))
+            if (!EqualityHelpers.ObjectsEqual(value, existingValue))
             {
                 throw new InvalidOperationException(
                     $"Inconsistent value cannot be set to metadata key '{key}': '{value}' vs '{existingValue}'");
