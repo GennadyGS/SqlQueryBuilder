@@ -99,6 +99,21 @@ public sealed class SqlQueryBuilderTests
             queryBuilder.GetParameters());
     }
 
+    [Fact]
+    public void ShouldSupportConcatenationWithAssignment()
+    {
+        // Building SQL query with parameters using interpolated strings concatenation
+        SqlQueryBuilder queryBuilder =
+            $"SELECT * FROM Orders WHERE Id = {123}";
+        queryBuilder += $" OR Id = {234}";
+        Assert.Equal(
+            "SELECT * FROM Orders WHERE Id = @p1 OR Id = @p2",
+            queryBuilder.GetQuery());
+        Assert.Equal(
+            new Dictionary<string, object?> { ["p1"] = 123, ["p2"] = 234 },
+            queryBuilder.GetParameters());
+    }
+
     [Theory]
     [InlineData(123)]
     [InlineData("abc")]

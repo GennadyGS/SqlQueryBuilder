@@ -65,6 +65,14 @@ public sealed class SqlQueryBuilder : IEquatable<SqlQueryBuilder>
     /// <returns><value>true</value> if instances are not equal or false otherwise.</returns>
     public static bool operator !=(SqlQueryBuilder? left, SqlQueryBuilder? right) =>
         !Equals(left, right);
+
+    /// <summary>
+    /// Concatenates two instances of <see cref="SqlQueryBuilder"/>.
+    /// </summary>
+    /// <param name="left">The left argument.</param>
+    /// <param name="right">The right argument.</param>
+    /// <returns>Concatenation of arguments.</returns>
+    public static SqlQueryBuilder operator +(SqlQueryBuilder left, SqlQueryBuilder right) =>
         Add(left, right);
 
     /// <summary>
@@ -95,6 +103,15 @@ public sealed class SqlQueryBuilder : IEquatable<SqlQueryBuilder>
         result.AppendFormatted(value);
         return result;
     }
+
+    /// <summary>
+    /// Concatenates two instances of <see cref="SqlQueryBuilder"/>.
+    /// </summary>
+    /// <param name="left">Left argument.</param>
+    /// <param name="right">Right argument.</param>
+    /// <returns>Concatenation of arguments.</returns>
+    public static SqlQueryBuilder Add(SqlQueryBuilder left, SqlQueryBuilder right) =>
+        $"{left}{right}";
 
     /// <summary>
     /// Gets the text of SQL query with inlined parameters.
