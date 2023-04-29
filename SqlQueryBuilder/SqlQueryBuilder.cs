@@ -31,7 +31,8 @@ public readonly struct SqlQueryBuilder
         Justification = "Constructor with following parameter is required for InterpolatedStringHandler")]
     public SqlQueryBuilder(int literalLength, int formattedCount)
     {
-        _entries = new((formattedCount * 2) + 1);
+        const int maxEntriesPerParameter = 2;
+        _entries = new((formattedCount * maxEntriesPerParameter) + 1);
     }
 
     /// <summary>
