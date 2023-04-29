@@ -235,27 +235,10 @@ public sealed class SqlQueryBuilder : IEquatable<SqlQueryBuilder>
     /// <returns>The text of SQL query.</returns>
     public override string ToString() => GetQuery();
 
-    private static IEnumerable<Entry> GetLeafEntries(Entry entry)
-    {
-        switch (entry)
-        {
-            case ParameterEntry parameterEntry:
-                yield return parameterEntry;
-                yield break;
-            case LiteralEntry literalEntry:
-                yield return literalEntry;
-                yield break;
-            case CompositeEntry compositeEntry:
-                foreach (var innerEntry in compositeEntry.Entries)
-                {
-                    yield return innerEntry;
-                }
-
-                yield break;
-            default:
-                throw new InvalidOperationException("Impossible case");
-        }
-    }
+    private static IEnumerable<Entry> GetLeafEntries(Entry entry) =>
+        entry is CompositeEntry compositeEntry
+            ? compositeEntry.Entries.SelectMany(GetLeafEntries)
+            : new[] { entry };
 
     private static void AppendLeafEntryToStringBuilder(
         Entry entry,

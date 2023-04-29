@@ -64,6 +64,28 @@ public sealed class SqlQueryBuilderTests
     }
 
     [Fact]
+    public void ShouldBeComposableRecursively()
+    {
+        // Composing SQL queries with parameters
+        SqlQueryBuilder innerQueryBuilder = $"SELECT * FROM Orders WHERE Id = {123}";
+        SqlQueryBuilder middleQueryBuilder =
+            $"SELECT * FROM ({innerQueryBuilder}) src WHERE IsValid = {true}";
+        SqlQueryBuilder outerQueryBuilder =
+            $"SELECT * FROM ({middleQueryBuilder}) src WHERE Amount > {5}";
+
+        Assert.Equal(
+            "SELECT * FROM (" +
+                "SELECT * FROM (" +
+                    "SELECT * FROM Orders WHERE Id = @p1) src " +
+                "WHERE IsValid = @p2) src " +
+            "WHERE Amount > @p3",
+            outerQueryBuilder.GetQuery());
+        Assert.Equal(
+            new Dictionary<string, object?> { ["p1"] = 123, ["p2"] = true, ["p3"] = 5 },
+            outerQueryBuilder.GetParameters());
+    }
+
+    [Fact]
     public void ShouldSupportConcatenation()
     {
         // Building SQL query with parameters using interpolated strings concatenation
