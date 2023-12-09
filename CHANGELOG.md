@@ -1,3 +1,6 @@
+## 1.4.0
+- Support .NET 8.0
+
 ## 1.3.1
 - Support concatenation with assignment
 - Support structural equality
