@@ -1,7 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Text;
 using SqlQueryBuilders.Utils;
-using WizNG.SqlGeneration.QueryBuilder.Utils;
 
 namespace SqlQueryBuilders;
 

@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace WizNG.SqlGeneration.QueryBuilder.Utils;
+﻿namespace SqlQueryBuilders.Utils;
 
 internal static class EqualityHelpers
 {
@@ -10,7 +7,7 @@ internal static class EqualityHelpers
         {
             (null, null) => true,
             (null, _) => false,
-            var (valueX, valueY) => valueX.Equals(valueY),
+            _ => x.Equals(y),
         };
 
     public static bool DictionariesEqual<TKey, TValue>(
