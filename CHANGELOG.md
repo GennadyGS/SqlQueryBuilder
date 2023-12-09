@@ -1,3 +1,6 @@
+## 1.4.1
+- License file is included in nuget package
+
 ## 1.4.0
 - Support .NET 8.0
 
