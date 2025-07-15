@@ -2,7 +2,7 @@
 
 [![NuGet](https://img.shields.io/nuget/v/GennadyGS.SqlQueryBuilder.svg)](https://www.nuget.org/packages/GennadyGS.SqlQueryBuilder)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![.NET](https://img.shields.io/badge/.NET-6.0%2B-blue.svg)](https://dotnet.microsoft.com/)
+[![.NET](https://img.shields.io/badge/.NET-8.0%2B-blue.svg)](https://dotnet.microsoft.com/)
 [![GitHub stars](https://img.shields.io/github/stars/GennadyGS/SqlQueryBuilder.svg)](https://github.com/GennadyGS/SqlQueryBuilder/stargazers)
 
 A powerful, type-safe SQL query builder for .NET that leverages C# string interpolation to create parameterized SQL queries with automatic SQL injection protection.
