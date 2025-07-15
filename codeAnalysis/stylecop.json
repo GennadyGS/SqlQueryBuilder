@@ -10,12 +10,12 @@
     },
     "namingRules": {
       "allowCommonHungarianPrefixes": true,
+      "allowedHungarianPrefixes": [],
       "includeInferredTupleElementNames": true,
-      "tupleElementNameCasing": "camelCase",
-      "allowedHungarianPrefixes": []
+      "tupleElementNameCasing": "camelCase"
     },
     "orderingRules": {
-      "systemUsingDirectivesFirst": false,
+      "systemUsingDirectivesFirst": true,
       "usingDirectivesPlacement": "outsideNamespace",
       "elementOrder": [
         "kind",

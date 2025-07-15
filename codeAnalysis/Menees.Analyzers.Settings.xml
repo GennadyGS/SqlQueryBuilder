@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Menees.Analyzers.Settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <TabSize>4</TabSize>
+  <NotifyLineColumns>120</NotifyLineColumns>
+  <MaxLineColumns>120</MaxLineColumns>
+  <MaxMethodLines>60</MaxMethodLines>
+  <MaxPropertyAccessorLines>10</MaxPropertyAccessorLines>
+  <MaxFileLines>500</MaxFileLines>
+</Menees.Analyzers.Settings>
