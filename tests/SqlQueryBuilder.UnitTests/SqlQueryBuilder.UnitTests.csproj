@@ -17,6 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SqlQueryBuilder\SqlQueryBuilder.csproj" />
+    <ProjectReference Include="..\..\src\SqlQueryBuilder\SqlQueryBuilder.csproj" />
   </ItemGroup>
 </Project>
