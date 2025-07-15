@@ -1,3 +1,7 @@
+## 1.5.0
+- Support for .NET 9.0
+- README.md is improved
+
 ## 1.4.1
 - License file is included in nuget package
 
