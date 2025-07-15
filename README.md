@@ -1,6 +1,7 @@
 # SqlQueryBuilder
 
 [![NuGet](https://img.shields.io/nuget/v/GennadyGS.SqlQueryBuilder.svg)](https://www.nuget.org/packages/GennadyGS.SqlQueryBuilder)
+![Build](https://img.shields.io/github/actions/workflow/status/GennadyGS/SqlQueryBuilder/build.yml?branch=master&style=flat-square)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![.NET](https://img.shields.io/badge/.NET-8.0%2B-blue.svg)](https://dotnet.microsoft.com/)
 [![GitHub stars](https://img.shields.io/github/stars/GennadyGS/SqlQueryBuilder.svg)](https://github.com/GennadyGS/SqlQueryBuilder/stargazers)
