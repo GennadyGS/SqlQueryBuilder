@@ -1,4 +1,4 @@
-# 🔧 SqlQueryBuilder
+# SqlQueryBuilder
 
 [![NuGet](https://img.shields.io/nuget/v/GennadyGS.SqlQueryBuilder.svg)](https://www.nuget.org/packages/GennadyGS.SqlQueryBuilder)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -7,18 +7,18 @@
 
 A powerful, type-safe SQL query builder for .NET that leverages C# string interpolation to create parameterized SQL queries with automatic SQL injection protection.
 
-## ✨ Features
+## Features
 
-- 🛡️ **SQL Injection Protection**: Automatically parameterizes interpolated values
-- 🔧 **Type-Safe**: Full IntelliSense support with compile-time checking
-- 🎯 **Simple API**: Natural C# string interpolation syntax
-- 🔗 **Composable**: Easily combine and nest query builders
-- 📊 **Flexible Formatting**: Support for literal strings and custom parameter names
-- 📝 **Metadata Support**: Attach additional information to queries
-- 🚀 **High Performance**: Minimal overhead with efficient string building
-- 📦 **Zero Dependencies**: Lightweight library with no external dependencies
+- **SQL Injection Protection**: Automatically parameterizes interpolated values
+- **Type-Safe**: Full IntelliSense support with compile-time checking
+- **Simple API**: Natural C# string interpolation syntax
+- **Composable**: Easily combine and nest query builders
+- **Flexible Formatting**: Support for literal strings and custom parameter names
+- **Metadata Support**: Attach additional information to queries
+- **High Performance**: Minimal overhead with efficient string building
+- **Zero Dependencies**: Lightweight library with no external dependencies
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Installation
 
@@ -49,7 +49,7 @@ var parameters = query.GetParameters();
 // Result: { ["p1"] = userId, ["p2"] = status }
 ```
 
-## 📚 Examples
+## Examples
 
 ### Basic Query Building
 
@@ -163,7 +163,7 @@ var products = connection.Query<Product>(
 );
 ```
 
-## 🛡️ Security
+## Security
 
 SqlQueryBuilder automatically protects against SQL injection by parameterizing all interpolated values. Values are never directly concatenated into the SQL string, ensuring your queries are safe by default.
 
@@ -175,11 +175,11 @@ SqlQueryBuilder query = $"SELECT * FROM Users WHERE Name = {userInput}";
 // Parameter: { ["p1"] = "'; DROP TABLE Users; --" }
 ```
 
-## 🎯 Supported Frameworks
+## Supported Frameworks
 
 - .NET 6.0, .NET 8.0
 
-## 📝 API Reference
+## API Reference
 
 ### Core Methods
 
@@ -199,11 +199,11 @@ SqlQueryBuilder query = $"SELECT * FROM Users WHERE Name = {userInput}";
 | `:l` | Literal string | `{tableName:l}` → `TableName` |
 | `:p` | Explicit parameter | `{value:p}` → `@p1` |
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Inspired by the need for type-safe SQL query building in .NET
 - Built with modern C# interpolated string handlers
