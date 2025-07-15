@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)codeAnalysis.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)/CodeAnalysis.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <ItemGroup>
