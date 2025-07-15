@@ -13,6 +13,7 @@ A powerful, type-safe SQL query builder for .NET that leverages C# string interp
 - **Type-Safe**: Full IntelliSense support with compile-time checking
 - **Simple API**: Natural C# string interpolation syntax
 - **Composable**: Easily combine and nest query builders
+- **Auto-Generated Parameters**: Parameter names are automatically generated and collision-safe, even in complex query composition scenarios
 - **Flexible Formatting**: Support for literal strings and custom parameter names
 - **Metadata Support**: Attach additional information to queries
 - **High Performance**: Minimal overhead with efficient string building
@@ -66,7 +67,7 @@ var (query, parameters) = queryBuilder.GetQueryAndParameters();
 
 ### Query Composition
 
-Easily compose complex queries by combining multiple SqlQueryBuilder instances:
+Easily compose complex queries by combining multiple SqlQueryBuilder instances. Parameter names are automatically managed to avoid collisions:
 
 ```csharp
 SqlQueryBuilder innerQuery = $"SELECT OrderId FROM Orders WHERE UserId = {userId}";
@@ -75,6 +76,15 @@ SqlQueryBuilder outerQuery = $"SELECT * FROM OrderDetails WHERE OrderId IN ({inn
 var (sql, parameters) = outerQuery.GetQueryAndParameters();
 // sql: "SELECT * FROM OrderDetails WHERE OrderId IN (SELECT OrderId FROM Orders WHERE UserId = @p1)"
 // parameters: { ["p1"] = userId }
+
+// Even with multiple nested queries, parameter names remain unique
+SqlQueryBuilder innermost = $"SELECT CustomerId FROM Customers WHERE Region = {region}";
+SqlQueryBuilder middle = $"SELECT OrderId FROM Orders WHERE CustomerId IN ({innermost}) AND Status = {status}";
+SqlQueryBuilder outermost = $"SELECT * FROM OrderDetails WHERE OrderId IN ({middle}) AND Quantity > {minQuantity}";
+
+var (complexSql, complexParams) = outermost.GetQueryAndParameters();
+// Parameters: { ["p1"] = region, ["p2"] = status, ["p3"] = minQuantity }
+// All parameter names are automatically managed and collision-safe
 ```
 
 ### Literal String Formatting
@@ -106,7 +116,7 @@ var (sql, parameters) = query.GetQueryAndParameters("param");
 
 ### Query Concatenation
 
-Combine multiple query parts using standard string concatenation:
+Combine multiple query parts using standard string concatenation. Parameter names remain unique across all parts:
 
 ```csharp
 SqlQueryBuilder baseQuery = $"SELECT * FROM Orders WHERE UserId = {userId}";
@@ -115,6 +125,10 @@ SqlQueryBuilder extendedQuery = baseQuery + $" AND CreatedDate > {startDate}";
 var (sql, parameters) = extendedQuery.GetQueryAndParameters();
 // sql: "SELECT * FROM Orders WHERE UserId = @p1 AND CreatedDate > @p2"
 // parameters: { ["p1"] = userId, ["p2"] = startDate }
+
+// Multiple concatenations maintain parameter uniqueness
+SqlQueryBuilder furtherExtended = extendedQuery + $" AND Amount > {minAmount}";
+// Parameters: { ["p1"] = userId, ["p2"] = startDate, ["p3"] = minAmount }
 ```
 
 ### Metadata Support
@@ -186,10 +200,19 @@ SqlQueryBuilder query = $"SELECT * FROM Users WHERE Name = {userInput}";
 | Method | Description |
 |--------|-------------|
 | `GetQuery()` | Returns the parameterized SQL query string |
-| `GetParameters()` | Returns the parameter dictionary |
+| `GetParameters()` | Returns the parameter dictionary with auto-generated, collision-safe names |
 | `GetQueryAndParameters()` | Returns both query and parameters as a tuple |
 | `GetQueryAndParameters(string prefix)` | Returns query and parameters with custom parameter prefix |
 | `AddMetadata(string key, object? value)` | Adds metadata to the query builder |
+
+### Parameter Name Generation
+
+SqlQueryBuilder automatically generates parameter names using a sequential numbering system (`@p1`, `@p2`, etc.) that ensures:
+
+- **Collision Safety**: No duplicate parameter names, even in complex compositions
+- **Predictable Ordering**: Parameters are numbered in the order they appear
+- **Composition Support**: Nested and concatenated queries maintain unique parameter names
+- **Custom Prefixes**: Use `GetQueryAndParameters(prefix)` to customize the parameter name prefix
 
 ### Format Specifiers
 
