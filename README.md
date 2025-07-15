@@ -191,7 +191,7 @@ SqlQueryBuilder query = $"SELECT * FROM Users WHERE Name = {userInput}";
 
 ## Supported Frameworks
 
-- .NET 6.0, .NET 8.0
+- NET 8.0 and later
 
 ## API Reference
 

@@ -1,5 +1,6 @@
 ## 1.5.0
-- Support for .NET 9.0
+- Support for .NET 9.0 is added
+- Support for .NET 6.0 is dropped
 - README.md is improved
 
 ## 1.4.1
