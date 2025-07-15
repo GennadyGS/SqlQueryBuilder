@@ -7,7 +7,6 @@
     <Nullable>enable</Nullable>
     <LangVersion>13.0</LangVersion>
     <IsPackable>false</IsPackable>
-    <CodeAnalysisRuleSet>$(SolutionDir)\codeAnalysis\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
     <NameSpacePrefix>GennadyGS</NameSpacePrefix>
     <AssemblyName>$(NameSpacePrefix).$(MSBuildProjectName)</AssemblyName>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
