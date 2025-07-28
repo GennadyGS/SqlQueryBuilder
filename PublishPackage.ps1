@@ -24,7 +24,7 @@ dotnet pack -c $configuration
 Test-CommandSuccess "dotnet pack"
 
 Write-Host "Pushing package to NuGet..."
-dotnet nuget push **/*.nupkg --api-key $apiKey --source $packageSource --skip-duplicate
+dotnet nuget push **/*.nupkg --api-key $apiKey --source $packageSource
 Test-CommandSuccess "dotnet nuget push"
 
 Write-Host "Creating git tag..."
