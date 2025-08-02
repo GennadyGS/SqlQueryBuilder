@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="CHANGELOG.md" />
+    <File Path="Directory.Build.props" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="src/SqlQueryBuilder/SqlQueryBuilder.csproj" />
+  <Project Path="tests/SqlQueryBuilder.UnitTests/SqlQueryBuilder.UnitTests.csproj" />
+</Solution>
